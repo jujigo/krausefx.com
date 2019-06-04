@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    
+      Felix Krause
+    
+  </title>
+  
+  <link rel="stylesheet" href="/assets/main.css">
+  <link rel="alternate" type="application/rss+xml" title="Felix Krause" href="/feed.xml">
+  
+    <script>
+  // Google Analytics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-18658848-6', 'auto');
+  ga('set', 'anonymizeIp', true)
+  ga('send', 'pageview');
+</script>
+
+  
+</head>
+
+
+  <body>
+
+    <header class="site-header" role="banner">
+
+  <div class="wrapper">
+    <a class="site-title" href="/">Felix Krause</a>
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+            <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+            <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <div class="trigger">
+        <a href="/" class="page-link active">Blog</a>
+        <a href="/privacy" class="page-link ">Privacy</a>
+        <a href="/projects" class="page-link ">Projects</a>
+        <a href="/archive" class="page-link ">Archive</a>
+        <a href="/about" class="page-link ">About</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div id="sidebar">
+  <h1 style="font-size: 21px;">Felix Krause</h1>
+  <p>Founder of <a href="https://fastlane.tools" target="_blank">fastlane.tools</a></p>
+
+  
+<div id="story-available">
+  <img 
+    src="https://graph.facebook.com/100000723486971/picture?type=large"
+    id="storyProfilePicture"
+    onclick="showStories()"
+  />
+</div>
+
+<div id="storyViewer">
+  <div id="storyViewerDimmedBackground" onclick="dismissStories()"></div>
+  <div id="storyContent">
+    <div id="storyHeader">
+      <img 
+        id="storyHeaderProfilePicture"
+        onclick="window.open('https://instagram.com/krausefx', '_blank')"
+      />
+      <p id="storyUserlink"><a href="https://instagram.com/krausefx" target="_blank">KrauseFx</a></p>
+      <p id="storyTimestamp"></p>
+      <p id="poweredByInstapipe"><a href="https://instapipe.net" target="_blank">instapipe.net</a></p>
+    </div>
+    <div id="storyProgressBar"></div>
+    <div id="storyBackButton" class="storyButton" onclick="userDidClickPreviousStory()">
+      <
+    </div>
+    <div id="storyNextButton" class="storyButton" onclick="userDidClickNextStory()">
+      >
+    </div>
+
+    <video autoplay playsinline muted id="storyVideoViewer">
+    </video>
+    <div id="storyPhotoViewer" onclick="userDidClickNextStory()">
+    </div>
+  </div>
+  <img src="" id="fakeContentToPreloadImages" />
+</div>
+
+<script type='text/javascript'>
+let host = "https://instapipe.herokuapp.com/"
+let userId = "4409072"
+
+var storiesToShow = null;
+var timeOutForPhotos = 4.0;
+var storyProgressSpacing = 5;
+var progressPadding = 2;
+var progressBars = null;
+var storiesContent = null;
+
+var nextStoryTimeout = null;
+var currentIndex = -1;
+
+function preloadStoriesIndex() {
+  var url = host + "stories.json?user_id=" + userId;
+
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.onreadystatechange = function() { 
+    if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+      storiesContent = JSON.parse(xmlHttp.responseText)
+      if (storiesContent.length == 0) {
+        // Default it's shown, as it looks nicer
+        // and I post stories most days :joy:
+        document.getElementById("story-available").className += "story-not-available"
+      } else {
+        // preload the first story if it's a picture
+        if (!storiesContent[0]["is_video"]) {
+          document.getElementById("fakeContentToPreloadImages").src = storiesContent[0]["signed_url"]
+        }
+      }
+    }
+  };
+
+  xmlHttp.open("GET", url, true); // true = asynchronous 
+  xmlHttp.send(null);
+}
+
+function showStories() {
+  if (storiesContent == null || storiesContent.length == 0) {
+    return;
+  }
+
+  // Copy the profile picture URL to the story header, to only have to define it once
+  // we only do that once everything is loaded, as depending on the website
+  // the image node might not be acccessible yet
+  let profileImageURL = document.getElementById("storyProfilePicture").src
+  document.getElementById("storyHeaderProfilePicture").src = profileImageURL;
+
+  storiesToShow = []
+  progressBars = []
+
+  document.getElementById("storyViewer").style.display = "block"
+
+  for (let storyIndex in storiesContent) {
+    let currentStory = storiesContent[storyIndex]
+    storiesToShow.push(currentStory)
+  }
+
+  for (let currentStoryIndex in storiesToShow) {
+    let currentStory = storiesToShow[currentStoryIndex]
+
+    // Append the progress items
+    var progressBarBackground = document.createElement("div")
+    progressBarBackground.className = "storyProgressBarItemBg"
+    progressBarBackground.style.width = "calc(" + (1.0 / storiesToShow.length) * 100 + "%" + " - " + progressPadding * 2 + "px)"
+    progressBarBackground.style.marginRight = progressPadding + "px"
+    progressBarBackground.style.marginLeft = progressPadding + "px"
+    document.getElementById("storyProgressBar").appendChild(progressBarBackground)
+
+    var progressBarForeground = document.createElement("div")
+    progressBarForeground.style.width = "0%"
+    progressBarForeground.className = "storyProgressBarItemFg"
+    progressBarBackground.appendChild(progressBarForeground)
+
+    progressBars.push(progressBarForeground)
+  }
+
+  currentIndex = 0
+  renderCurrentStory()
+
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.onreadystatechange = function() {}
+  xmlHttp.open("GET", host + "didOpenStories", true); // true = asynchronous 
+  xmlHttp.send(null);
+}
+
+function renderCurrentStory() {
+  currentStory = storiesToShow[currentIndex]
+  
+  for (let index in progressBars) {
+    let currentProgressBar = progressBars[index]
+    if (currentIndex > index) {
+      currentProgressBar.style.width = "100%"
+    } else {
+      currentProgressBar.style.width = "0%"
+    }
+  }
+
+  // Show image/video
+  let videoViewer = document.getElementById("storyVideoViewer")
+  let photoViewer = document.getElementById("storyPhotoViewer")
+  let progressBarContent = progressBars[currentIndex]
+
+  document.getElementById("storyTimestamp").textContent = currentStory["formatted_time_diff"]
+
+  if (currentStory["is_video"]) {
+    videoViewer.src = currentStory["signed_url"]
+    videoViewer.style.display = "block"
+    videoViewer.onended = function() {
+      if (currentIndex < storiesToShow.length - 1) {
+        currentIndex++;
+        renderCurrentStory();
+      } else {
+        dismissStories();
+      }
+    };
+    let videoUpdatedDuration = function() {
+      // this is triggered when the video file was loaded
+      // videos have dynamic length
+      animateProgressBar(progressBarContent, videoViewer.duration)
+      videoViewer.removeEventListener("durationchange", videoUpdatedDuration)
+    }
+    videoViewer.addEventListener("durationchange", videoUpdatedDuration)
+    videoViewer.load()
+    videoViewer.play()
+    photoViewer.style.display = "none"
+  } else {
+    photoViewer.style.backgroundImage = "url('" + currentStory["signed_url"] + "')"
+    videoViewer.style.display = "none"
+    photoViewer.style.display = "block"
+    animateProgressBar(progressBarContent, timeOutForPhotos) // photos are always x seconds
+
+    // Advance to next story after X seconds
+    nextStoryTimeout = setTimeout(function() {
+      if (currentIndex < storiesToShow.length - 1) {
+        currentIndex++;
+        renderCurrentStory();
+      } else {
+        dismissStories();
+      }
+    }, timeOutForPhotos * 1000)
+  }
+
+  // Trigger the next one
+  if (currentIndex < storiesToShow.length - 1 && !storiesToShow[currentIndex + 1]["is_video"])
+  {
+    setTimeout(function() {
+      // Poor person's pre-loading of images, with a slight delay
+      document.getElementById("fakeContentToPreloadImages").src = storiesToShow[currentIndex + 1]["signed_url"]
+    }, timeOutForPhotos / 3.0 * 1000)
+  }
+}
+
+function animateProgressBar(progressBar, duration) {
+  progressBar.style.animationName = "storyViewProgress";
+  progressBar.style.animationDuration = duration + "s";
+}
+
+function userDidClickPreviousStory() {
+  if (currentIndex > 0) {
+    stopAllAnimations()
+    currentIndex--;
+    renderCurrentStory();
+  } else {
+    dismissStories();
+  }
+}
+
+function userDidClickNextStory() {
+  if (currentIndex < storiesToShow.length - 1) {
+    stopAllAnimations()
+    currentIndex++;
+    renderCurrentStory();
+  } else {
+    dismissStories();
+  }
+}
+
+function stopAllAnimations() {
+  clearTimeout(nextStoryTimeout)
+  document.getElementById("storyVideoViewer").onended = null
+
+  for (let index in progressBars) {
+    let currentProgressBar = progressBars[index]
+    currentProgressBar.style.animationName = null
+  }
+}
+
+function dismissStories() {
+  document.getElementById("storyViewer").style.display = "none"
+  document.getElementById("storyProgressBar").innerHTML = ""
+  stopAllAnimations()
+}
+
+window.addEventListener("keyup", function(e) {
+  if (e.keyCode == 27) { // ESC
+    dismissStories()
+    return true;
+  }
+  if (e.keyCode == 37) { // Left
+    userDidClickPreviousStory();
+  }
+  if (e.keyCode == 39) { // Right
+    userDidClickNextStory();
+  }
+}, false);
+
+preloadStoriesIndex();
+
+</script>
+<style type='text/css'>
+#storyProfilePicture {
+  width: 128px;
+  height: 128px;
+  border-radius: 70px;
+  margin-left: 3px;
+  margin-top: 3px;
+  cursor: pointer;
+  border: 4px solid white;
+}
+
+#story-available {
+  background-image: linear-gradient(rgb(186, 62, 138), #fba051);
+  height: 142px;
+  width: 142px;
+  z-index: -10;
+  border-radius: 70px;
+  margin-bottom: 15px;
+}
+
+#story-available.story-not-available {
+  background-image: none !important;
+}
+
+#storyViewer {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  text-align: center;
+  display: none;
+
+  font-family: 'Helvetica Neue', sans-serif;
+  font-weight: normal;
+}
+#storyViewer > #storyViewerDimmedBackground {
+  /* This is a separate div to allow onclick events */
+  background-color: rgba(0, 0, 0, 0.8);
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+  position: absolute;
+}
+
+#storyViewer p {
+  color: #686868;
+  font-size: 20px;
+  line-height: 24px;
+  margin: 0 0 24px;
+  text-align: center;
+  text-justify: inter-word;
+}
+
+#storyViewer > #storyContent {
+  width: 512px;
+  max-width: 80%; /* for mobile devices */
+  margin-top: 30px;
+  display: inline-block;
+
+  /* 
+    To get the right aspect ratio, while still having a dynamic content size
+    https://stackoverflow.com/questions/1495407/maintain-the-aspect-ratio-of-a-div-with-css
+    IG content: 910px height to 512px width = ~178%
+    So the `padding-bottom` sets the height of the content
+  */
+  padding-bottom: 178%;
+}
+
+#storyViewer > #storyContent > .storyButton {
+  position: fixed;
+  top: calc(910px - 450px);
+  background-color: rgba(200, 200, 200, 0.88);
+  padding: 10px;
+  color: rgba(0, 0, 0, 0.8);
+  font-weight: bolder;
+  font-size: 16px;
+  border-radius: 18px;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+#storyViewer > #storyContent > #storyBackButton {
+  left: 50px;
+}
+
+#storyViewer > #storyContent > #storyNextButton {
+  right: 53px; /* no idea where the difference comes from */
+}
+
+#storyViewer > #storyContent > #storyPhotoViewer {
+  width: 100%;
+  padding-bottom: 178%; /* see comment in #storyContent */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+#storyViewer > #storyContent > #storyVideoViewer {
+  padding-bottom: 178%; /* see comment in #storyContent */
+  width: 100%;
+}
+
+#storyViewer > #storyContent > #storyProgressBar {
+  width: calc(100% + 4px);
+  margin-left: -2px;
+  height: 3px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#storyViewer > #storyContent > #storyProgressBar > .storyProgressBarItemBg {
+  border-radius: 6px;
+  background-color: rgba(187, 187, 187, 0.6);
+  height: 100%;
+  display: inline-block;
+  float: left;
+}
+
+.storyProgressBarItemFg {
+  background-color: #FFF;
+  height: 100%;
+  border-radius: 3px;
+  animation-timing-function: linear;
+}
+
+#fakeContentToPreloadImages {
+  height: 0;
+  width: 0;
+  opacity: 0;
+}
+
+@keyframes storyViewProgress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* Story header */
+#storyHeader {
+  height: 50px;
+  text-align: left;
+}
+
+#storyHeader > #storyHeaderProfilePicture {
+  height: 38px;
+  width: 38px;
+  border-radius: 19px;
+  cursor: pointer;
+  margin-top: 7px;
+  display: block-inline;
+}
+
+#storyHeader > #storyUserlink {
+  display: block-inline;
+  margin-left: 50px;
+  text-align: left;
+  margin-top: -40px; /* hacky */
+  padding-top: 0;
+  font-size: 20px;
+}
+
+#storyHeader > #storyUserlink > a {
+  color: white !important;
+  text-decoration: none;
+}
+
+#storyHeader > #storyTimestamp {
+  color: #777;
+  display: block-inline;
+  margin-left: 50px;
+  text-align: left;
+  margin-top: -28px;
+  padding-top: 0;
+  font-size: 16px;
+}
+
+#storyHeader > #poweredByInstapipe {
+  display: block-inline;
+  margin-left: 150px;
+  text-align: right;
+  margin-top: -50px; /* hacky */
+  padding-top: 0;
+  font-size: 16px;
+}
+
+#storyHeader > #poweredByInstapipe > a {
+  color: #999 !important;
+  text-decoration: none;
+}
+
+</style>
+
+  <p><a href="/about">More about me</a></p>
+
+  <!-- Social links -->
+  <ul class="social-media-list" style="margin-top: 20px; margin-bottom: 30px;">
+    <li>
+      <a href="https://github.com/KrauseFx" target="_blank"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">KrauseFx</span></a>
+
+    </li>
+    <li>
+      <a href="https://twitter.com/KrauseFx" target="_blank"><span class="icon icon--twitter"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">KrauseFx</span></a>
+
+    </li>
+    <li>
+      <a href="https://instagram.com/KrauseFx" target="_blank"><span class="icon icon--instagram"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+</span><span class="username">KrauseFx</span></a>
+
+    </li>
+    <li>
+      <a href="https://www.linkedin.com/in/KrauseFx"><span class="icon icon--linked"><svg width="16px" height="16px" viewBox="0 0 430.117 430.117" xml:space="preserve"><path id="LinkedIn" fill="#828282" d="M430.117,261.543V420.56h-92.188V272.193c0-37.271-13.334-62.707-46.703-62.707 c-25.473,0-40.632,17.142-47.301,33.724c-2.432,5.928-3.058,14.179-3.058,22.477V420.56h-92.219c0,0,1.242-251.285,0-277.32h92.21 v39.309c-0.187,0.294-0.43,0.611-0.606,0.896h0.606v-0.896c12.251-18.869,34.13-45.824,83.102-45.824 C384.633,136.724,430.117,176.361,430.117,261.543z M52.183,9.558C20.635,9.558,0,30.251,0,57.463 c0,26.619,20.038,47.94,50.959,47.94h0.616c32.159,0,52.159-21.317,52.159-47.94C103.128,30.251,83.734,9.558,52.183,9.558z M5.477,420.56h92.184v-277.32H5.477V420.56z"/></svg>
+</span><span class="username">KrauseFx</span></a>
+
+    </li>
+  </ul>
+
+  <hr />
+
+  <a href="https://whereisfelix.today" target="_blank">
+    ✈️ WhereIsFelix.today
+  </a>
+
+  <hr />
+
+  <p class="subscribe-newsletter">
+  Want to be the first to hear about more privacy and mobile related essays?
+</p>
+
+<form class="subscribe-form" action="https://krausefx.us10.list-manage.com/subscribe/post?u=a84ca3495977afb89bf2b98fb&amp;id=d9610c8987" method="post" target="popupwindow" onsubmit="window.open('https://krausefx.us10.list-manage.com/subscribe/post?u=a84ca3495977afb89bf2b98fb', 'popupwindow', 'scrollbars=yes,width=600,height=620');return true">
+  <label for="tlemail"></label>
+  <input type="text" placeholder="Email Address" name="EMAIL" id="tlemail">
+  <input type="hidden" value="1" name="embed">
+  <button type="submit" name="subscribe">
+    Subscribe
+  </button>
+</form>
+
+
+  <hr />
+
+  <div class='jekyll-twitter-plugin'><a class="twitter-timeline" data-width="500" data-tweet-limit="5" href="https://twitter.com/KrauseFx?ref_src=twsrc%5Etfw">Tweets by KrauseFx</a>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+
+</div>
+
+
+        <div class="home">
+  
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline"><a href="/blog/one-year-nomad">One year nomad - a review</a></h1>
+        <p class="post-meta">
+          <time datetime="2018-11-09T00:00:00+00:00" itemprop="datePublished">
+            
+            Nov 9, 2018
+          </time>
+          </p>
+      </header>
+
+      <div class="post-content" itemprop="articleBody">
+        <div class="jekyll-twitter-plugin"><blockquote class="twitter-tweet"><p lang="en" dir="ltr">I got rid of all my stuff and live off only a suitcase - staying in Airbnbs to explore different areas 🏡🚀 excited to live nomad life <a href="https://t.co/nWGf7AFKiZ">pic.twitter.com/nWGf7AFKiZ</a></p>&mdash; Felix Krause (@KrauseFx) <a href="https://twitter.com/KrauseFx/status/928718106876305408?ref_src=twsrc%5Etfw">November 9, 2017</a></blockquote>
+<script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+
+<h2 id="background">Background</h2>
+
+<p><a href="/blog/going-nomad">Today one year ago</a> I decided to get rid of my belongings and live out of a suitcase. It started as an experiment I didn’t expect to be doing for long. However after 365 days without a permanent home, I have no intentions on changing my current setup.</p>
+
+<p>To summarize the <a href="/blog/going-nomad">last year’s thoughts</a> on why I want to stop having a lease:</p>
+
+<ul>
+  <li><strong>Money</strong>: I only spent about 200 nights at home, making it unused for almost half the year</li>
+  <li><strong>Routine</strong>: I don’t like having a routine when it comes places, subway and commute</li>
+  <li><strong>Maintenance</strong>: I don’t enjoy spending time setting up my apartment &amp; repairing things</li>
+</ul>
+
+<p>Most digital nomads run their own business or are freelancers/consultants. I’m a full-time Google employee working on <a href="https://fastlane.tools">fastlane</a> here in New York City.</p>
+
+<p><a href="https://instagram.com/krausefx">
+  <img src="/assets/posts/nomad/working-desk1.jpg" />
+</a></p>
+
+<h2 id="how-is-the-nomad-life-so-far">How is the nomad life so far?</h2>
+
+<ul>
+  <li>I enjoy the flexibility of changing cities and neighborhoods as I want</li>
+  <li>Living out of a suitcase &amp; carry-on has worked surprisingly well: while I do have to limit the number of items I own, I haven’t had any troubles with it. Getting through the New York winter is a little trickier, so I keep one winter jacket in NYC, and one in Europe</li>
+  <li>Maintaining fitness progress is trickier, mostly due to the change of kitchen on every move</li>
+  <li>One time I stayed on a boat in New York 🛥</li>
+  <li>I got to stay in 8 different New York neighborhoods</li>
+  <li>I always have clothes for 12 days with me</li>
+  <li>I never forget stuff as I always have everything with me, there is no such thing as “I didn’t bring X on my trip”</li>
+</ul>
+
+<p><a href="https://instagram.com/krausefx">
+  <img src="/assets/posts/nomad/from-top.jpg" />
+</a></p>
+
+<h2 id="money">Money</h2>
+
+<p>One of the main motivators of starting my nomad life was to save money. Today I did the math to see if it actually worked.</p>
+
+<p><strong>The last 365 days I:</strong></p>
+
+<ul>
+  <li>Spoke at a <a href="https://github.com/krausefx/speaking">total of 7 conferences</a>, in Russia, Austria, USA, Serbia and Norway</li>
+  <li>Visited the SF Bay Area 3 times for team offsites and WWDC</li>
+  <li>Stayed with my family in Austria for a total of 2 months</li>
+  <li>Stayed at “home” in NYC/SF in Airbnbs for a total of <strong>231 nights</strong> paying a total of <strong>$26,130</strong> (63% of the nights of the year)</li>
+</ul>
+
+<p>As mentioned in my <a href="/blog/going-nomad">previous nomad post</a>, the average rent in Airbnb can be assumed to be about $3,000 for a studio apartment. Including utilities, furniture and other expenses related to the apartment, you can easily pay a total of about <strong>$40,000</strong> per year if you want <a href="https://www.rentcafe.com/average-rent-market-trends/us/ny/manhattan/">your own apartment in Lower Manhattan</a>.</p>
+
+<p>Meaning I saved about <strong>$14,000</strong> by going nomad, while having far less responsibilities, as well as get to see new places and neighborhoods each month.</p>
+
+<h2 id="airbnbs">Airbnbs</h2>
+
+<p>Most of the times I lived in Airbnbs in NYC, my experience with it has been pretty good so far. The check-in usually works by picking up the key from a KeyCafe in a nearby Deli. This part is quite tricky, as I have to enter the Deli with all my stuff, and then climb the stairs as most older buildings in NYC don’t have an elevator.</p>
+
+<p><img src="/assets/posts/nomad/airbnb-history.jpg" /></p>
+
+<p>My friends working at Airbnb are happy about the fees I pay on each booking :)</p>
+
+<p>One thing that has proven extremely useful is using the best travel credit card you can get: By receiving 4.5% cash-back for each travel-related purchase, I get over <strong>$1,000 for free</strong> every year by living in Airbnbs and using my credit card.</p>
+
+<p style="text-align: center">
+  <img src="/assets/posts/nomad/boat.jpg" />
+</p>
+
+<p>For a few nights I stayed on a boat in New York through Airbnb, costing the same as all my other Airbnbs per night (note: it’s the small one in front).</p>
+
+<p style="text-align: center">
+  <img src="/assets/posts/nomad/working-desk2.jpg" />
+</p>
+
+<p>One highlight was a 2 weeks trip to Taipei together with <a href="https://twitter.com/taquitos">@taquitos</a> to work together, instead of meeting in San Francisco or New York.</p>
+
+<h2 id="conferences">Conferences</h2>
+
+<p>When being invited to speak at conferences, the conference organizers cover the hotel during your stay. Every night they cover saves me about $100 (assuming the SF/NYC rent prices), as I don’t have to pay my lease during that time. I usually combine multiple conferences on one multi-week trip and cover the hotel nights in-between instead of flying back and forth.</p>
+
+<h2 id="friends--happiness">Friends &amp; Happiness</h2>
+
+<p><a href="https://instagram.com/krausefx" target="_blank">
+  <img src="/assets/posts/nomad/friends.jpg" align="right" width="310" style="margin-left: 20px;" />
+</a></p>
+
+<p>This is something I talked about in the <a href="/blog/going-nomad">original nomad blog post</a>: If you travel to a new city every other week, it’s going to be really difficult to build up close relationships with friends. That’s why I’ve been a big fan of the current setup: I stay in the same city, but move within it, meaning I get to hang out with the same group of people and spend quality time with them, while still having the benefits of a nomad life.</p>
+
+<p>Since February 2018 I’m tracking my mood &amp; happiness level 3 times a day, here is the result so far:</p>
+
+<p><img src="/assets/posts/nomad/mood.png" /></p>
+
+<p>3 times a day I answer the question on how I’m feeling on a scale from 0 to 6 using my <a href="https://github.com/KrauseFx/mood">open source Telegram bot</a></p>
+
+<blockquote>
+  <p>If today were the last day of my life, would I want to do what I am about to do today?” And whenever the answer has been “No” for too many days in a row, I know I need to change something.</p>
+</blockquote>
+
+<p>As everything in life, things are an up and down. The overall trend is visible as the green line, which is clearly a wave going in cycles. I marked the <code class="highlighter-rouge">I'm feeling average</code> level as orange. Ideally I don’t want any of the other colored lines to go below it. One-off values below it are common as seen as the light gray dots. Looking at the graph, every time the blue line dropped below the orange one, something happened that affected my overall mood. It’s good to see the line usually recovering back to normal rather fast.</p>
+
+<h2 id="fitness">Fitness</h2>
+
+<p>I’ve been spending a lot of time working on reaching my fitness goals in the year of 2018, and it has worked surprisingly well:</p>
+
+<ul>
+  <li>The last years I did mostly power lifting, so I also gained a good amount of fat. As of February 2018 I wanted to work on appearance and wanted to focus on a clean diet as well as a different workout</li>
+  <li>I lost 25lbs (11 kg) within 6 months while keeping a good amount of muscle mass</li>
+  <li>I stopped cooking at home, as finding things at a new kitchen and setting everything up doesn’t work if you’re only staying for a week or two. Instead, 100% of my meals were from the Google office and eating out. This makes following a strict nutrition plan a lot more difficult, as I can’t track the exact macros, and don’t have control over the fat that’s used</li>
+  <li>I managed to drop my body fat percentage by 6%, to a total of 8.9% according to the <a href="https://www.nhs.uk/conditions/dexa-scan/">DEXA scan</a> (the only decent-precise way to measure body fat)</li>
+  <li>I travel my own <a href="https://www.amazon.com/gp/product/B00D5FGR2C/ref=oh_aui_search_detailpage?ie=UTF8&amp;psc=1">travel scale</a> to track my body weight every morning</li>
+  <li>I track everything I eat in MyFitnessPal. Tracking food is a game changer, no matter how well you think you eat, MyFitnessPal will most likely tell you otherwise if you haven’t tracked macros in the past (very thankful my fitness trainer <a href="https://instagram.com/faronsalisbury">@faronsalisbury</a> convinced me to do this)</li>
+  <li>I usually stock up the fridge with a few essentials, being frozen chicken breast, frozen veggies, black beans, oatmeal and some diet sodas.</li>
+  <li>Having a routine, and your own place with your own kitchen would make reaching fitness goals easier</li>
+</ul>
+
+<h2 id="whereisfelixtoday">whereisfelix.today</h2>
+
+<p>A joke project I started back in February 2018: <a href="https://whereisfelix.today">whereisfelix.today</a></p>
+
+<p>As people in SF/NYC travel around a lot, it’s often difficult to schedule time to meet. Most conversations start with “Hey, when are you back in New York?”. I decided to buy this domain for fun, and have my travel schedule up there.</p>
+
+<p>The reactions from people when I send them this link are great. I now even have a shortcut on my Mac to type the domain for me.</p>
+
+<p><a href="https://whereisfelix.today">
+  <img src="/assets/posts/nomad/whereisfelix1.png" width="400px" style="margin-right: -20px; margin-left: -20px;" />
+  <img src="/assets/posts/nomad/whereisfelix2.png" width="400px" style="margin-right: -40px; margin-left: -20px;" />
+</a></p>
+
+<p>It’s a real-time dashboard of which city I’m currently in, as well as my upcoming travel schedule. Over the last few months I added more and more information to it, including my current mood (which I track with my <a href="https://github.com/krausefx/mood">open source Telegram bot</a>), the macros I ate today, current time, weight and most recent Instagram pictures.</p>
+
+<p>I used this project as an excuse to learn some things I haven’t used yet: TypeScript, node.js, Angular, and immutable deployments on <a href="https://zeit.co">Zeit</a>.</p>
+
+<p>The website itself is also <a href="https://github.com/krausefx/whereisfelix.today">open source on GitHub</a>.</p>
+
+<h2 id="downsides">Downsides</h2>
+
+<ul>
+  <li>Turns out, government entities and banks are not so familiar with the concept of digital nomads and are not happy when you tell them you don’t have a home address, nor a utility bill or lease agreement. I’m happy I opened all my financial accounts before this change, as it for sure makes things a little more complicated.</li>
+  <li>Moving around is exhausting, even if you only carry your suitcase + bag. It still takes about 3 hours to move to a new place.</li>
+  <li>Everything around fitness, from tracking, cooking to buying food in bulk, to meal-prepping would be a lot easier if I wasn’t a nomad</li>
+  <li>Media: I don’t watch a lot of TV, nor play a lot of games, but when I do, it’s annoying to get things up and running. Setting things up takes time, and is usually not worth it. I end up watching Netflix just on my phone, and the only console I have is the Nintendo Switch, as I can play without a TV. The same goes for the sound system: I ended up buying my own <a href="https://smile.amazon.com/Bose-SoundLink-Portable-Long-Lasting-Bluetooth/dp/B06XCW4VFS/ref=sr_1_17?s=electronics&amp;ie=UTF8&amp;qid=1541758490&amp;sr=1-17">portable speaker</a> I bring with me so I don’t have to deal with learning how each apartment’s sound system works.</li>
+  <li>It takes a lot of time finding good Airbnbs, lots of hosts don’t respond and you have to plan ahead</li>
+  <li>I miss having a proper working setup outside the office: Having an external monitor and a standing desk is something I really learned to appreciate. As shown in the pictures in this post, I carry around a <a href="https://www.therooststand.com/">mobile MacBook stand</a>, as well as Apple keyboard, trackpad and mouse.</li>
+</ul>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p><img src="/assets/posts/nomad/suitcases2.jpg" align="right" width="300" style="margin-left: 20px;" /></p>
+
+<p>Living out of a suitcase comes with its challenges. You learn a lot about yourself, what you need, what you appreciate and how to optimize your life around not owning a lot.</p>
+
+<p>I really appreciate the chance to re-invent your daily schedule every time you move. You learn a lot about different kinds of apartments and what you make use of most often.</p>
+
+<p>Staying in one city, and moving within it has proven very efficient when it comes to being productive, getting to know new people as well as staying close with your friends.</p>
+
+<p>It is possible to reach your fitness goals without a fixed routine, and without cooking, however it does make things a little more challenging. Having a gym membership with a chain that has multiple locations in your city is key 🔑.</p>
+
+<p>I’m really happy I made the switch, it has been a great journey so far.</p>
+
+
+        <!-- <p style="margin-top: 30px" class="side-projects-note">
+  <small>Unless otherwise mentioned in the post, those projects are side projects which I work on on weekends and evenings, and are not affiliated with my work or employer.</small>
+</p>
+ -->
+      </div>
+
+      <p class="extra-info">
+        
+          Tags: digital, nomad &nbsp; | &nbsp; 
+        
+        <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2018-11-09-one-year-nomad.md" target="_blank" class="forkButton">
+  <svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+ 
+  Edit on GitHub
+</a>
+      </p>
+    </article>
+  
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline"><a href="/blog/ios-factor">iOS-factor: A methodology for building high-quality iOS apps</a></h1>
+        <p class="post-meta">
+          <time datetime="2018-07-07T00:00:00+00:00" itemprop="datePublished">
+            
+            Jul 7, 2018
+          </time>
+          </p>
+      </header>
+
+      <div class="post-content" itemprop="articleBody">
+        <p><a href="https://ios-factor.com">iOS-factor</a> was inspired by the famous <a href="https://www.12factor.net/">twelve-factor app framework</a>, a methodology to write high-quality web services. <a href="https://ios-factor.com">iOS-factor</a> uses the same structure and similar principles, re-written and applied to the iOS app development processes.</p>
+
+<h2 id="background">Background</h2>
+
+<p>Over the past 10 years, the iOS development process has shifted drastically:</p>
+
+<ul>
+  <li>from supporting a single device to a wide range of available iOS-powered iPhones and iPads and various platforms like tvOS and watchOS</li>
+  <li>from manually including git submodules to using dependency managers</li>
+  <li>from iOS apps mostly running locally on-device, to iOS apps heavily relying on backend services</li>
+  <li>from iOS app review times of more than 2 weeks to less than a day</li>
+  <li>from installing an app on your phone using iTunes to distributing apps through the official TestFlight channel</li>
+  <li>from uploading 5 screenshots per language to iTunes Connect to 110 per language, as well as app previews</li>
+  <li>from plain Objective-C/C++ apps to a mix of languages including JavaScript</li>
+  <li>from slow releases whenever something is ready, to shipping every single week</li>
+  <li>from full releases to A/B testing, slow rollouts and automatic regression detection</li>
+</ul>
+
+<h2 id="whats-ios-factor">What’s <a href="https://ios-factor.com">iOS-factor</a>?</h2>
+
+<p><a href="https://ios-factor.com">iOS-factor</a> is a project I started in May 2018. It aims to provide a collection of best practices for building high-end iOS applications. Each topic is covered by a <code class="highlighter-rouge">factor</code>, which describes an ideal state of how a certain category of the iOS app development process could look like.</p>
+
+<p>Due to certain limitations (like Xcode running only on macOS) not all requirements can be fulfilled. This project aims to define goals, as well as the best current approaches to solve some of the challenges we’re facing.</p>
+
+<p><a href="https://ios-factor.com">iOS-factor</a> is all about the bigger-picture iOS app development processes and architecture decisions and will not cover any language specific challenges.</p>
+
+<p>This is a living project, maintained by the iOS development community. You can find the full source on <a href="https://github.com/iOS-factor/iOS-factor.com">GitHub</a> and update existing pages or add new factors.</p>
+
+<h3 style="text-align: center; font-size: 140%"><a href="https://ios-factor.com">Open iOS-factor.com</a></h3>
+
+
+
+        <!-- <p style="margin-top: 30px" class="side-projects-note">
+  <small>Unless otherwise mentioned in the post, those projects are side projects which I work on on weekends and evenings, and are not affiliated with my work or employer.</small>
+</p>
+ -->
+      </div>
+
+      <p class="extra-info">
+        
+          Tags: ios &nbsp; | &nbsp; 
+        
+        <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2018-07-07-ios-factor.md" target="_blank" class="forkButton">
+  <svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+ 
+  Edit on GitHub
+</a>
+      </p>
+    </article>
+  
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline"><a href="/blog/ios-app-network-sandboxing">iOS apps should be inside a network sandbox</a></h1>
+        <p class="post-meta">
+          <time datetime="2018-05-23T00:00:00+00:00" itemprop="datePublished">
+            
+            May 23, 2018
+          </time>
+          </p>
+      </header>
+
+      <div class="post-content" itemprop="articleBody">
+        <h2 id="background">Background</h2>
+
+<p>With my recent publications, most importantly “<a href="https://krausefx.com/blog/trusting-sdks">Trusting SDKs</a>” it became clear that hijacked or malicious iOS apps cause major security and privacy risks for users, and allow attackers to reach a high number of users through a single point of failure.</p>
+
+<p>Most of the times, the consequences of those attacks are about data:</p>
+
+<ul>
+  <li>Usernames and passwords</li>
+  <li>Location data</li>
+  <li>Facial data</li>
+  <li>Advertising data</li>
+  <li>Address book entries</li>
+  <li>Payment information (e.g. credit cards)</li>
+  <li>Other personal information</li>
+</ul>
+
+<p>Notice how sandboxes in software are designed to keep data inside that box (in the form of a filesystem), but for some reason they stop when it comes to network requests.</p>
+
+<p>If an attacker manages to hijack an iOS app, the first thing they would do is sent the collected data to some server in their control.</p>
+
+<h2 id="idea">Idea</h2>
+
+<p>Initially just <a href="https://twitter.com/KrauseFx/status/962116690233339904">tweeting my shower thoughts</a> and reaching 300 likes &amp; 50 RTs, this idea grew more and more:</p>
+
+<div class="jekyll-twitter-plugin"><blockquote class="twitter-tweet"><p lang="en" dir="ltr">Apple should require every iOS app to define a list of web hosts that should be accessible, all other web requests will fail:<br /><br />- If an app gets compromised no data can leak<br />- It forces the use of SFSafariViewController<br />- Users should be able to see the host list</p>&mdash; Felix Krause (@KrauseFx) <a href="https://twitter.com/KrauseFx/status/962116690233339904?ref_src=twsrc%5Etfw">February 10, 2018</a></blockquote>
+<script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+
+<h3 id="app-transport-security">App Transport Security</h3>
+
+<p>At <a href="https://techcrunch.com/2016/06/14/apple-will-require-https-connections-for-ios-apps-by-the-end-of-2016/">WWDC 2016 Apple announced ATS</a>, an iOS 9 feature to enforce the use of HTTPs across all iOS apps. It was said to be made mandatory by end of 2016, however the deadline was moved to an undefined date. The idea makes perfect sense: All the infrastructure and tools around HTTPs encryption people already have with their web browsers to verify the security on websites, don’t work on the iOS platform. If you use your banking or dating app, how can you as a user be sure the company didn’t mess things up? <a href="https://techcrunch.com/2018/04/02/grindr-sends-hiv-status-to-third-parties-and-some-personal-data-unencrypted/">It’s not like it happened before</a>.</p>
+
+<h3 id="web-vs-ios">Web vs iOS</h3>
+
+<p>On the web, <a href="https://developers.google.com/web/updates/2016/10/avoid-not-secure-warn">browsers started marking HTTP websites as “Not Secure”</a>, <a href="https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security">HSTS is built into browsers to force HTTPs for certain hosts</a>, <a href="https://chrome.google.com/webstore/detail/https-everywhere/gcbommkclmclpchllfjekcdonpmejbdp?hl=en">people use HTTPSEverywhere to enforce HTTPs connection across more hosts</a> and <a href="https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm?hl=en">people use uBlock to block certain tracking and ad widgets that slow down websites</a>.</p>
+
+<p>On iOS, you install and use an app, and hope that the app developer uses proper encryption, securely stores your personal information, and doesn’t use any sketchy SDKs that you wouldn’t trust yourself. If you don’t agree with something (e.g. an Analytics SDK), there is nothing you can do about it.</p>
+
+<h2 id="proposal">Proposal</h2>
+
+<h3 id="step-1">Step 1:</h3>
+
+<p>Finish the ATS plans. It’s been 2 years now, enough time for app developers to update their apps. Allow developers to file for an exception, and mark them accordingly on the App Store page with a badge of shame (similar to how <a href="https://developers.google.com/web/updates/2016/10/avoid-not-secure-warn">Chrome marks all non HTTPs websites</a> nowadays)</p>
+
+<h3 id="step-2">Step 2:</h3>
+
+<p><img src="/assets/posts/sandboxing.png" width="250" align="right" style="margin: 15px" /></p>
+
+<p>Introduce the concept of network sandboxes. Each app should define a list of hostnames they are allowed to access.</p>
+
+<p>Imagine a ride-sharing app having access to</p>
+
+<ul>
+  <li>my-ride-sharing-app.com</li>
+  <li>stripe.com</li>
+  <li>google-analytics.com</li>
+  <li>maps.google.com</li>
+</ul>
+
+<p>This list serves multiple purposes:</p>
+
+<ul>
+  <li>The app can only access those hosts. Meaning if an SDK is malicious or your app got hijacked in some way, they can’t access the scary internet and leak the user’s data.</li>
+  <li>The app review team will see a list as they approve the app. At the same time, they can see a diff of the hosts between app releases</li>
+  <li>The user should have a way to see that list as part of the App Store page</li>
+  <li>In the future we could even put the user in control by distinguishing between primary hosts (e.g. twitter.com) that are needed to have the app running, and secondary hosts (e.g. random-analytics-service.com). This however would come with many implications when it comes to revenue models of the majority of mobile apps.</li>
+</ul>
+
+<p>As always, exceptions should be possible, third party browsers should exist, and some apps might have to support so many hosts that they can’t follow those rules. And that’s okay, those apps will be marked as “Can access any host” as a little warning in the App Store.</p>
+
+<p>While the above doesn’t solve all the problems, it is a good first step into the right direction. We’ll run into problems, and we’ll solve them. It’s a necessary change for the mobile ecosystem, catching up with where we’re already at with web browsers nowadays.</p>
+
+
+        <!-- <p style="margin-top: 30px" class="side-projects-note">
+  <small>Unless otherwise mentioned in the post, those projects are side projects which I work on on weekends and evenings, and are not affiliated with my work or employer.</small>
+</p>
+ -->
+      </div>
+
+      <p class="extra-info">
+        
+          Tags: privacy, security &nbsp; | &nbsp; 
+        
+        <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2018-05-23-ios-app-network-sandboxing.md" target="_blank" class="forkButton">
+  <svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+ 
+  Edit on GitHub
+</a>
+      </p>
+    </article>
+  
+    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline"><a href="/blog/going-nomad">Going nomad</a></h1>
+        <p class="post-meta">
+          <time datetime="2018-03-24T00:00:00+00:00" itemprop="datePublished">
+            
+            Mar 24, 2018
+          </time>
+          </p>
+      </header>
+
+      <div class="post-content" itemprop="articleBody">
+        <div class="jekyll-twitter-plugin"><blockquote class="twitter-tweet"><p lang="en" dir="ltr">I got rid of all my stuff and live off only a suitcase - staying in Airbnbs to explore different areas 🏡🚀 excited to live nomad life <a href="https://t.co/nWGf7AFKiZ">pic.twitter.com/nWGf7AFKiZ</a></p>&mdash; Felix Krause (@KrauseFx) <a href="https://twitter.com/KrauseFx/status/928718106876305408?ref_src=twsrc%5Etfw">November 9, 2017</a></blockquote>
+<script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+
+<hr />
+
+<p><strong>Update</strong>: Check out the <a href="/blog/one-year-nomad">One Year Nomad post from 2018</a></p>
+
+<h2 id="background">Background</h2>
+
+<p>I moved to San Francisco summer 2015 to join Twitter. I lived in a furnished apartment for my first year, which I really enjoyed, as I didn’t have to buy all the essentials myself after moving across the globe into a new country.</p>
+
+<p>After my 1 year lease, I decided to do what “grown-ups” are supposed to do: get their own apartment, buy furniture, decorate the place, and make it your home. After living in my little studio for about 1.5 years, I noticed a few things:</p>
+
+<ul>
+  <li>In 2017 I only spent about 200 nights in my apartment, causing me to still pay about 5 months worth of San Francisco rent without actually living there (the average monthly lease for a studio apartment is about $3,000 + utilities, resulting in about $15,000 of my after tax money being lost)</li>
+  <li>While I enjoy having my own space, I never invested enough time and effort into making it nice: Until the day I moved out after 18 months, I still didn’t have enough closets for all my things and I had my clothes piled up in some corner</li>
+  <li>I didn’t like being bound to one location in the city. In particular, in the common case of getting acquired by another company (#justSFthings), your commute changes, and you can’t just move around</li>
+  <li>I didn’t like the fact that I was always surrounded by the same places and things became routine. Same subway station, same spots you walk by every day, same views, same commute, etc. after a month it gets boring and I need a change.</li>
+</ul>
+
+<p><img src="/assets/posts/nomad/SF-Map.png" /></p>
+
+<hr />
+
+<h2 id="the-idea">The idea</h2>
+
+<p>Ever since I first started reading <a href="https://levels.io/">@levelsio’s blog</a> in 2014, about living out of <a href="https://levels.io/carry-on-world-travel/">just a backpack</a>, and <a href="https://levels.io/remote-working-is-the-future/">traveling across the world, while working on his own startups</a>, I was fascinated by the idea. However I always assumed it doesn’t work if you have a full-time job at a large company like Twitter or Google.</p>
+
+<p>2014 was also the time I met <a href="https://twitter.com/orta">@orta</a>, who told me about his first year in New York City, where he lived in a different neighborhood in a random Airbnb each month. This allowed him to see what NYC has to offer, and what area he liked the most. I loved the idea, and kind of knew I want to do this at some point in life.</p>
+
+<p>Only in October 2017 I realized that combining those two things might actually just work.</p>
+
+<h2 id="making-the-move">Making the move</h2>
+
+<p><img src="/assets/posts/nomad/suitcases.jpg" width="240" align="right" style="margin-left: 20px" /></p>
+
+<p>After living in San Francisco for 2.5 years, I wanted a change. With my lease ending in October, I decided to reduce my life to just</p>
+
+<ul>
+  <li>1 suitcase</li>
+  <li>1 carry-on luggage</li>
+  <li>1 backpack</li>
+</ul>
+
+<p>and lived in an Airbnb in San Francisco until the winter holidays, for which I went back home to Austria. I got really lucky with my SF Airbnb, as I got it from <a href="https://zeusliving.com/">Zeus Living</a> a company that rents out apartments for people like me: rent a place per month, all utilities included, and enough space with a desk to get work done.</p>
+
+<p>For the last 6 months I’ve lived the nomad life, with just the things listed above. So far I’ve stayed in 6 different neighborhoods in NYC, 2 areas in SF and spent time with my family in Austria for New Year’s. While I plan flights ahead of time due to costs, I don’t book places longer than a month ahead, something that took some time getting used to.</p>
+
+<h2 id="spending-time-in-a-single-city">Spending time in a single city</h2>
+
+<p>While being a different city each month might sound like a dream to many people, I learned it comes with many downsides:</p>
+
+<ul>
+  <li>It’s hard to build up a social circle of close friends</li>
+  <li>It’s hard to really get to know a city, and make use of all the things it has to offer</li>
+  <li>It’s hard to learn more about the culture</li>
+  <li>Cities change with seasons, a summer is usually quite different than a winter</li>
+  <li>It’s stressful changing cities too often</li>
+</ul>
+
+<p>Last year I <a href="https://github.com/krausefx/speaking">spoke at conferences in 9 cities</a>. I knew I wanted to fly less in 2018.</p>
+
+<p>In January 2018, we started the new <a href="https://github.com/fastlane/ci">fastlane.ci project</a>, which requires us to work closer with other Google teams, that are partially based in New York. I used that opportunity to “move” to NYC. So while I move to a different Airbnb every week, I do so within the same city. I grew up in a village with a population of less than 2,000, with not a single traffic light. Living in New York has been an amazing experience, with almost as many people living here, as in the whole country of Austria.</p>
+
+<p>For now, this seems like the perfect balance for me personally: Not getting bored by day to day routine (e.g. same commute) by moving to a new Airbnb every week, but also being able to hang out with the same friends, and get to know the whole city. Long term, I’ll switch to a monthly cycle for even less overhead.</p>
+
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+
+<h3 id="how-do-you-handle-physical-mail">How do you handle physical mail?</h3>
+
+<p><strong>Online orders</strong>: I’m lucky that I can use the Google office to order from Amazon, and pick them up at the end of the work day. It’s offered in most major cities, and even allows me to order something for a specific location. For example: When I flew to Amsterdam I ordered an umbrella to the office, ready for me to pick up.</p>
+
+<p><strong>Letters</strong>: I use the <a href="https://www.virtualpostmail.com/">VirtualPostMail</a> service. They scan your letters, and sends them to you via email. If you need the original, you can tell them to forward them to your current address (or office in my case)</p>
+
+<h3 id="money">Money</h3>
+
+<p>My first thought was: Staying in Airbnbs must be more expensive than having my own place! For multiple reasons:</p>
+
+<ul>
+  <li>Short term leases have to charge more to account for the vacant nights</li>
+  <li>Airbnbs are furnished, and include some basic services and utilities</li>
+  <li>Airbnb charges a pretty hefty fee for each booking</li>
+</ul>
+
+<p>Circling back to the number of days I’m <strong>not</strong> at home for about 5 months each year, I realized that I don’t pay my (SF/NYC) rent when:</p>
+
+<ul>
+  <li>I speak at a conference, and the organizers cover the hotel costs</li>
+  <li>I go on vacation</li>
+  <li>I go back home</li>
+  <li>I crash on a friend’s couch / extra bed</li>
+  <li>Google plans a team-offsite in a different location and covers the accommodation</li>
+  <li>I take a <a href="https://en.wikipedia.org/wiki/Red-eye_flight">red eye flight</a> (a flight that leaves at about midnight, and lands in the morning)</li>
+</ul>
+
+<p>Every night I don’t need to pay for my own place, I save about $100 after-tax money (NYC/SF)</p>
+
+<h3 id="do-you-keep-any-physical-memories">Do you keep any physical memories</h3>
+
+<p>You can either ask your parents nicely to keep your things, or you can rent storage somewhere to keep it. I decided to bring my things back home to Austria, by just having an extra bag with me the first time I flew back.</p>
+
+<h3 id="how-did-you-get-rid-of-so-much-stuff">How did you get rid of so much stuff?</h3>
+
+<p>I don’t care about physical things. If I were to lose all my devices, or all my clothes today, I’d buy new ones (probably the same ones). So getting rid of things was rather easy, and I personally never understood why it’s difficult, unless there are certain memories attached.</p>
+
+<p>All I did was: Do I really need this? If the answer wasn’t an immediate yes, it’s a no. If I wanted to keep the “memory”, I made sure to take a picture before giving it away.</p>
+
+<p>I created a spreadsheet with all the things I give away, and shared it with my friends on Facebook, from furniture, to kitchen stuff, to light bulbs, and I got “rid” of everything, as 2 of my friends just moved to a new place, and needed almost everything. The remaining things I donated or threw away if it wasn’t usable any more.</p>
+
+<p>I went from</p>
+
+<p><img src="/assets/posts/nomad/diff.jpg" /></p>
+
+<p>It is tricky though to buy new stuff, since I need to get rid of something else, for every single new item I buy. While my suitcases still have some space left, the weight limit of 22kg of most airlines is what I have to be careful about.</p>
+
+<h3 id="how-do-you-keep-things-organized">How do you keep things organized?</h3>
+
+<p>Those <a href="https://shop.eaglecreek.com/packit-cube-set/d/1322">travel cubes</a> have been pretty useful, I got a lot of them, for shirts, socks, underwear, electronics, etc. and can recommend them to anyone traveling.</p>
+
+<h3 id="did-you-buy-any-travel-gear-for-this">Did you buy any travel gear for this?</h3>
+
+<p><img src="/assets/posts/nomad/ordered.jpg" align="right" style="margin-left: 20px" width="240" /></p>
+
+<p>Yes, there are some really cool things out there, that made my life easier:</p>
+
+<ul>
+  <li><a href="https://www.bose.com/en_us/products/speakers/portable_speakers/soundlink-revolve-plus-bundle.html">Portable Bose SoundLink Revolve+</a></li>
+  <li><a href="https://www.therooststand.com">Roost Stand</a> (MacBook stand for ergonomic working wherever you are in combination with Bluetooth keyboard + trackpad)</li>
+  <li><a href="https://shop.eaglecreek.com/packit-cube-set/d/1322">Travel cubes</a> to keep things organized</li>
+  <li><a href="https://www.amazon.com/gp/product/B00D5FGR2C/ref=oh_aui_detailpage_o01_s00?ie=UTF8&amp;psc=1">Travel scale</a> (I’m into fitness, and started tracking my weight every morning)</li>
+</ul>
+
+<h3 id="is-that-minimalism-life">Is that “Minimalism Life”?</h3>
+
+<p>I’ve read a bit about this topic, including <a href="https://medium.com/@coolasspuppy/200-things-dfa3d5034cd7">a great blog post of my friend about owning 200 things</a>. I love the concept of owning just the things you really need, and forget the rest.</p>
+
+<p>I also watched the <a href="https://www.netflix.com/title/80114460">“Minimalism” documentary on Netflix</a>, which covers some of the concepts. Personally I don’t want to count things, or reduce life in areas I don’t want to. For example, I still carry around a rather high number of shoes with me, just because I like having the right shoes for the right occasion.</p>
+
+<p>I’d argue the goal is to live a normal day-to-day life, when going to work or hanging out with friends, while still being very flexible.</p>
+
+<h3 id="security-concerns">Security concerns</h3>
+
+<p>That’s something I’ve been thinking more about recently: Breaking into an Airbnb is probably super easy, just stay in a place, copy the key and then steal from the next person, with the next person probably blaming the host or cleaning staff. Unfortunately it’s not common for Airbnbs to have a safe.</p>
+
+<ul>
+  <li>I generally don’t own anything of real value, besides my MacBook</li>
+  <li>I don’t leave anything valuable in my Airbnb but put them in the Google office instead</li>
+  <li>All of my documents are stored online</li>
+  <li>Hourly backups on different continents, using hard drives and custom cloud backup solutions, all end to end encrypted, on a total of 5 different locations</li>
+  <li>Even if I were to lose 100% of my things including all my devices, I have a clear recovery path where I can recover my complete online identity, documents and everything else within less than 24 hours. For security reasons I can’t share more about this specific topic, but I can recommend everyone to draw a map of dependencies between the services/software/hardware you use, and how you can recover them step by step.</li>
+</ul>
+
+<h3 id="what-else-is-nice-about-not-having-a-fixed-lease">What else is nice about not having a fixed lease?</h3>
+
+<ul>
+  <li>If you stay at a place for just a week, you’ll never have to clean the apartment</li>
+  <li>You learn how other people live day to day, e.g. how they set up their rooms and get a good idea of what you enjoy</li>
+  <li>You learn more about yourself, like what things are important to you when it comes to having a living space</li>
+  <li>When you own a home, you have to deal with maintenance, repairs and other things quite often. When renting an apartment building, at least some things are being taken care of by the owners. If you stay in Airbnb, there is literally nothing you have to worry about, if something doesn’t work, you notify the host and that’s it.</li>
+</ul>
+
+<p><img src="/assets/posts/nomad/taipei.jpg" /></p>
+
+<p>I wrote this post in Taipei, Taiwan, where I work remotely from the Taipei Google office for 2 weeks before heading to San Francisco.</p>
+
+<p>Being able to escape the cold winter feels amazing 😎</p>
+
+<hr />
+
+<p><strong>Update</strong>: Check out the <a href="/blog/one-year-nomad">One Year Nomad post from 2018</a></p>
+
+
+
+        <!-- <p style="margin-top: 30px" class="side-projects-note">
+  <small>Unless otherwise mentioned in the post, those projects are side projects which I work on on weekends and evenings, and are not affiliated with my work or employer.</small>
+</p>
+ -->
+      </div>
+
+      <p class="extra-info">
+        
+          Tags: digital, nomad &nbsp; | &nbsp; 
+        
+        <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2018-03-24-going-nomad.md" target="_blank" class="forkButton">
+  <svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+ 
+  Edit on GitHub
+</a>
+      </p>
+    </article>
+  
+
+  <!-- Pagination links -->
+  <div class="pagination">
+    
+      <a href="/" class="previous">Newer</a>
+    
+    /
+    
+      <a href="/blog/page3/" class="next">Older</a>
+    
+  </div>
+
+</div>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          <li>
+            <a href="https://github.com/KrauseFx" target="_blank"><span class="icon icon--github"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">KrauseFx</span></a>
+
+          </li>
+          <li>
+            <a href="https://twitter.com/KrauseFx" target="_blank"><span class="icon icon--twitter"><svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">KrauseFx</span></a>
+
+          </li>
+        </ul>
+      </div>
+      <div class="footer-col footer-col-2"></div>
+      <div class="footer-col footer-col-3">
+        <p class="subscribe-newsletter">
+  Want to be the first to hear about more privacy and mobile related essays?
+</p>
+
+<form class="subscribe-form" action="https://krausefx.us10.list-manage.com/subscribe/post?u=a84ca3495977afb89bf2b98fb&amp;id=d9610c8987" method="post" target="popupwindow" onsubmit="window.open('https://krausefx.us10.list-manage.com/subscribe/post?u=a84ca3495977afb89bf2b98fb', 'popupwindow', 'scrollbars=yes,width=600,height=620');return true">
+  <label for="tlemail"></label>
+  <input type="text" placeholder="Email Address" name="EMAIL" id="tlemail">
+  <input type="hidden" value="1" name="embed">
+  <button type="submit" name="subscribe">
+    Subscribe
+  </button>
+</form>
+
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+<script type="text/javascript">
+  var links = document.links;
+  for (var i = 0, linksLength = links.length; i < linksLength; i++) {
+    if (links[i].hostname != window.location.hostname) {
+      links[i].target = '_blank';
+    } 
+  }
+</script>
+
+
+  </body>
+
+</html>

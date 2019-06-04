@@ -8,7 +8,7 @@
 
   <title>
     
-      Felix Krause
+      iOS Privacy: detect.location - An easy way to access the user's iOS location data without actually having access &middot; Felix Krause
     
   </title>
   
@@ -568,358 +568,94 @@ preloadStoriesIndex();
 </div>
 
 
-        <div class="home">
-  
-    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline"><a href="/blog/instapipe">instapipe.net - Distribute your Instagram stories</a></h1>
-        <p class="post-meta">
-          <time datetime="2019-05-22T00:00:00+00:00" itemprop="datePublished">
-            
-            May 22, 2019
-          </time>
-          </p>
-      </header>
-
-      <div class="post-content" itemprop="articleBody">
-        <h2 id="background">Background</h2>
-
-<p>You want to share experiences as they are happening in your life. Instagram Stories is a great way to do so, thanks to cross-posting to Facebook, Messenger and Instagram itself, allowing most people to view your stories.</p>
-
-<p>However just like Snapchat, the platforms try to lock you in, with the content <strong>you</strong> create. Many of my family members and close friends don’t use FB/IG daily, but still wanted to stay up to date on what I’m up to.</p>
-
-<p>Due to lack of an official API, and any kinds of integrations, the only way to access your stories is through the inofficial API the Instagram mobile- and web client use.</p>
-
-<h2 id="solution">Solution</h2>
-
-<p>A simple web service that automatically downloads and publishes your stories on various platforms. It’s open source and fully self hosted, check it out <a href="https://github.com/KrauseFx/instapipe">on GitHub</a>.</p>
-
-<h3 id="embed-into-websites">Embed into websites</h3>
-
-<p><a href="https://whereisfelix.today">
-  <img src="/assets/posts/instapipe/whereisfelixScreenshot.jpg" />
-</a></p>
-
-<p>Showing what you’re up to on the websites you operate is an easy way to make your online presence more personal.</p>
-
-<ul>
-  <li><a href="https://whereisfelix.today">On whereisfelix.today</a></li>
-  <li><a href="https://krausefx.com">Integrated into krausefx.com</a> (desktop only)</li>
-  <li><a href="https://krausefx.github.io/instapipe/web/index.html">Plain live demo</a></li>
-</ul>
-
-<p><strong>Features</strong></p>
-
-<ul>
-  <li>Design similar to instagram.com web</li>
-  <li>Arrow keys to go back and forth between stories</li>
-  <li>Support for photos and videos</li>
-  <li>Support for desktop and mobile browsers</li>
-  <li>Dismiss stories using ESC key, and clicking the dimmed area</li>
-  <li>Pre-loading of the next story for instant rendering</li>
-  <li>Basic features like rendering of the progress bar, the relative time stamp, as well as linking to your profile</li>
-  <li>Zero dependencies, plain JavaScript, CSS and HTML in a single file</li>
-</ul>
-
-<h3 id="provide-a-json-api">Provide a JSON API</h3>
-
-<p>Of course it also provides you with a JSON API, that can be used to integrate your Instagram stories into any app or service. The API includes all relevant data, including the raw image, location and the exact resolution of the media assets.</p>
-
-<p><img src="/assets/posts/instapipe/apiScreenshot.jpg" /></p>
-
-<p><a href="https://instapipe.herokuapp.com/stories.json?user_id=4409072">https://instapipe.herokuapp.com/stories.json?user_id=4409072</a></p>
-
-<p>Make sure to manually copy &amp; paste this in a new tab to avoid the cross-site scripting protection</p>
-
-<h3 id="telegram-group">Telegram group</h3>
-
-<p>Many of my friends don’t want to check Instagram every day, but still want to stay up to date with what I’m up to. Since they all use Telegram already, I set up a channel that automatically shows the stories I post.</p>
-
-<p><a href="https://t.me/joinchat/AAAAAFADGfZcXqQj3TK73A">
-  <img src="/assets/posts/instapipe/telegramScreenshot.jpg" />
-</a></p>
-
-<p>A <a href="https://t.me/joinchat/AAAAAFADGfZcXqQj3TK73A">Telegram group</a> containing all my latest stories. In particular nice to get an overview over all your most recent stories. Join it <a href="https://t.me/joinchat/AAAAAFADGfZcXqQj3TK73A">here</a>.</p>
-
-<h2 id="how-it-works">How it works</h2>
-
-<p>Instapipe is a simple server, that periodically fetches your most recent Instagram stories. As soon as a new story is available, it will</p>
-
-<ul>
-  <li>Download the highest resolution photo/video and store it on your personal Google Cloud Bucket</li>
-  <li>Store the associated metadata in a database you own, the data includes
-    <ul>
-      <li>24 hours signed URL to the full-resolution photo/video of your Google Cloud Storage</li>
-      <li>The full path of the resource referencing your Google Cloud bucket</li>
-      <li>The user ID who published the asset</li>
-      <li>The height and width of the photo/video</li>
-      <li>The exact time stamp of publishing</li>
-      <li>An <code class="highlighter-rouge">is_video</code> flag</li>
-      <li>The location (if a location tag is attached)
-        <ul>
-          <li>Location Name (e.g. <code class="highlighter-rouge">Das Gym</code>)</li>
-          <li><code class="highlighter-rouge">lat</code> and <code class="highlighter-rouge">lng</code> coordinates</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-  <li>Post the new story into a Telegram group (<a href="https://t.me/joinchat/AAAAAFADGfZcXqQj3TK73A">check it out here</a>)</li>
-</ul>
-
-<p><img src="/assets/posts/instapipe/databaseScreenshot.jpg" /></p>
-
-<hr />
-
-<h3 style="text-align: center; font-size: 140%"><a href="https://instapipe.net">Open instapipe.net</a></h3>
-
-
-
-        <!-- <p style="margin-top: 30px" class="side-projects-note">
-  <small>Unless otherwise mentioned in the post, those projects are side projects which I work on on weekends and evenings, and are not affiliated with my work or employer.</small>
-</p>
- -->
-      </div>
-
-      <p class="extra-info">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline"><a href="/blog/ios-privacy-detectlocation-an-easy-way-to-access-the-users-ios-location-data-without-actually-having-access">iOS Privacy: detect.location - An easy way to access the user&#39;s iOS location data without actually having access</a></h1>
+    <p class="post-meta">
+      <time datetime="2017-10-09T00:00:00+00:00" itemprop="datePublished">
         
-          Tags: open-source, instagram, telegram &nbsp; | &nbsp; 
-        
-        <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2019-05-22-instapipe.md" target="_blank" class="forkButton">
+        Oct 9, 2017
+      </time> &nbsp; | &nbsp; 
+      <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2017-10-09-ios-privacy-detectlocation-an-easy-way-to-access-the-users-ios-location-data-without-actually-having-access.md" target="_blank" class="forkButton">
   <svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
  
   Edit on GitHub
 </a>
-      </p>
-    </article>
-  
-    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline"><a href="/blog/walk-with-friends">walkwithfriends.net - Stay in touch with remote friends</a></h1>
-        <p class="post-meta">
-          <time datetime="2019-05-21T00:00:00+00:00" itemprop="datePublished">
-            
-            May 21, 2019
-          </time>
-          </p>
-      </header>
+  </header>
 
-      <div class="post-content" itemprop="articleBody">
-        <p>Staying in touch with close friends requires more effort when everybody lives somewhere else on the planet. Scheduling calls to catch up certainly works, but it requires time-commitment, and time zones make scheduling unnecessarily complicated.</p>
+  <div class="post-content" itemprop="articleBody">
+    <p>Does your iOS app have access to the user’s image library? Do you want to know your user’s movements over the last several years, including what cities they’ve visited, which iPhones they’ve owned and how they travel? Do you want all of that data in less a second? Then this project is for you!</p>
 
-<p>After living in NYC for a year, I ended up doing the following: If I walk somewhere for about 30 minutes, I’d text 2 friends or family members, asking if they’re available for a chat. Often one of them would end up calling me. This way, no prior planning was necessary, things felt more spontaneous and I was able to use my NYC walking time to catch up.</p>
+<p><img src="/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_59db4461cf81e005db7a2062_1507542261614_Screenshot+2017-10-09+11.40.41.png.41.png_" alt="" /></p>
 
-<h2 id="the-problems">The problems</h2>
+<p><img src="/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_59db44b8f09ca452b53663ab_1507542252323_Screenshot+2017-10-09+11.40.48.png.48.png_" alt="" /></p>
+
+<p>To see all the above with <strong>your</strong> data, download the <a href="https://itunes.apple.com/us/app/detectlocations/id1288532777?ls=1&amp;mt=8">DetectLocations app</a> from the App Store.</p>
+
+<h2 id="what-can-you-do-with-detectlocation">What can you do with detect.location?</h2>
 
 <ul>
-  <li>If I text a friend <code class="highlighter-rouge">Hey X, are you free for a call?</code>, chances are they’re at work, asleep, with friends or don’t look at their phone. They’d see my message 2 hours later and reply <code class="highlighter-rouge">Yep, sure, calling you now</code>. The problem here is that by that time I’m unavailable, as the message is from 2 hours ago.</li>
-  <li>If a friend doesn’t know about this setup, they’d think I want to discuss something specific or urgent, however those kinds of calls are just to catch up and stay in touch.</li>
-  <li>Often, either none of my friends were available, or multiple responded, so it was always a tricky balance on how many friends I’d text, with the risk of both of them replying <code class="highlighter-rouge">Yep, I'm free now</code></li>
-  <li>If one friend is never available, you kind of “forget” to text them, as you already assume subconsciously that they won’t be available</li>
+  <li>Get a history of the cities, countries, and other places a user has visited, as long as they took a picture there</li>
+  <li>Find the user’s place of work, by figuring out where they are from 9 to 5</li>
+  <li>Get a complete list of the user’s cameras and photography devices (which iPhones, Android phones, cameras) and how long they used each device</li>
+  <li>Use facial recognization to find out who the user hangs out with and who their partner is. Is the user single?</li>
+  <li>Understand the user’s background:
+    <ul>
+      <li>Did the user attend college? If so, which one?</li>
+      <li>Did the user recently move from the suburbs to the city?</li>
+      <li>Does the user spend a lot of time with their family?</li>
+    </ul>
+  </li>
 </ul>
 
-<h2 id="the-solution">The solution</h2>
+<h2 id="whats-detectlocation">What’s detect.location?</h2>
 
-<p>A Telegram bot that manages the communication and revokes messages as soon as you’re unavailable again.</p>
+<ul>
+  <li>The native image picker built into iOS allows app developers to access the <strong>full</strong> image library, with all its metadata</li>
+  <li>With the raw PHAsset object, which represents a picture or video, you also get access to the image’s metadata. This includes the location and even the speed at which the user was traveling when the picture was taken.</li>
+  <li>In particular, an app can get the following data:</li>
+  <li>The exact location of each asset</li>
+  <li>The physical speed in which the picture/video was taken (how fast did the camera move)</li>
+  <li>The camera model</li>
+  <li>The exact date + time</li>
+  <li>Other exif image metadata</li>
+  <li>With this information, you can render a route of the user’s travels, into the past for as long as they’ve had a GPS-enabled camera (like an iPhone, other smartphone, or modern point-and-shoot)</li>
+  <li>You can access all of this metadata without analyzing the 
+contents of the image at all</li>
+</ul>
 
-<h3 style="text-align: center; font-size: 35px; border: none">
-  <a href="https://t.me/WalkWithFriendsBot" target="_blank" style="text-decoration: none;">
-    🔰 Start using the bot 🔰
+<p>For more information about the proposal on how this could be fixed, how the code works and more, check out the GitHub link below.</p>
+
+<h3 style="text-align: center; font-size: 40px;">
+  <a href="https://github.com/krausefx/detect.location" target="_blank" style="text-decoration: underline;">
+    Open on GitHub
   </a>
 </h3>
 
-<table style="width: 90%">
-  <tr>
-    <td>
-      <img src="/assets/posts/walkwithfriends/screenshot1_framed.jpg" />
-    </td>
-    <td>
-      <img src="/assets/posts/walkwithfriends//screenshot2_framed.jpg" />
-    </td>
-    <td>
-      <img src="/assets/posts/walkwithfriends//screenshot3_framed.jpg" />
-    </td>
-  </tr>
-</table>
+<p><br /></p>
 
-<p><strong>Why Telegram?</strong></p>
+<h2 id="similar-projects-ive-worked-on">Similar projects I’ve worked on </h2>
 
-<ul>
-  <li>It works on every major platform, including iOS, Android and macOS</li>
-  <li>It supports revoking of messages and notifications, even from the lock screen</li>
-  <li>They have a solid bots API</li>
-  <li>Registration for new users is easy &amp; fast</li>
-</ul>
-
-<h3 id="more-details-on-walkwithfriendsnet"><a href="https://walkwithfriends.net">More details on WalkWithFriends.net</a></h3>
+<p>I published more posts on how to access the camera, the user’s location data, their Mac screen and their iCloud password, check out <a href="/privacy">krausefx.com/privacy</a> for more.</p>
 
 
-        <!-- <p style="margin-top: 30px" class="side-projects-note">
+    <!-- <p style="margin-top: 30px" class="side-projects-note">
   <small>Unless otherwise mentioned in the post, those projects are side projects which I work on on weekends and evenings, and are not affiliated with my work or employer.</small>
 </p>
  -->
-      </div>
-
-      <p class="extra-info">
-        
-          Tags: telegram &nbsp; | &nbsp; 
-        
-        <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2019-05-21-walk-with-friends.md" target="_blank" class="forkButton">
-  <svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
- 
-  Edit on GitHub
-</a>
-      </p>
-    </article>
-  
-    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline"><a href="/blog/ending-my-fastlane-chapter">Ending my fastlane chapter</a></h1>
-        <p class="post-meta">
-          <time datetime="2019-02-13T00:00:00+00:00" itemprop="datePublished">
-            
-            Feb 13, 2019
-          </time>
-          </p>
-      </header>
-
-      <div class="post-content" itemprop="articleBody">
-        <p>I’ve built and published iOS apps for over 8 years now. Back then the App Store review times were over 2 weeks, iTunes Connect would allow only uploads of a single screenshot at a time, there was no CocoaPods… and code signing was pretty much the same as it is today.</p>
-
-<p>In 2014, I sat in my dorm room and started working on a tool to solve some of the challenges I faced as an iOS developer. It started out by just automating the upload of screenshots and binaries to iTunes Connect. After publishing the initial version in November 2014, the iOS community seemed excited about it. It slowly went from just <em>deliver</em>, to more tools like <em>snapshot</em> to generate the screenshots and <em>pem</em> to automate iOS push notifications.</p>
-
-<p><img src="/assets/posts/fastlane-dormroom.jpeg" /></p>
-
-<p>Fast-forward to today, I’m so humbled by what <em>fastlane</em> has grown to be. It has changed the way large iOS teams work every day, how they release their app updates, and how code signing works. It even enabled founders to start new businesses using <em>fastlane</em> as their core foundation.</p>
-
-<p><img src="/assets/posts/fastlane-growth.png" style="margin-top: 20px; margin-bottom: 20px" /></p>
-
-<p>I’m so proud to see how the community has grown around it. When <em>fastlane</em> initially launched, it supported only 10 integrations. Today there are over 570 different integrations, from code coverage reports, beta testing services to build version management. All of this wouldn’t have been possible without the <a href="https://github.com/fastlane/fastlane/graphs/contributors">all the 922 contributors of the <em>fastlane</em> main code base</a>, all <a href="https://docs.fastlane.tools/plugins/available-plugins/">the authors of the 355 third party plugins</a>, as well as the <a href="https://github.com/fastlane/fastlane#fastlane-team">fastlane core contributor team</a>.</p>
-
-<p><img src="/assets/posts/fastlane-team.jpg" /></p>
-
-<p>It was great to see <em>fastlane</em> evolving from a small side project, into a stable, self-sustainable open source project with a strong community of contributors around it. I have no doubts that <em>fastlane</em> will continue growing stronger in the next years, with the support of Google, as well as other companies and individual contributors.</p>
-
-<p><strong>📯 After 4.5 years it’s time for me to step away from <em>fastlane</em>, and with that leave Google.</strong></p>
-
-<p>As for what’s next, I don’t have any specific plans yet. I’ll be taking a vacation and then figuring out what problem I’m excited to solve next :)</p>
-
-<p>As always, you can stay in touch on <a href="https://twitter.com/krausefx">Twitter</a> and <a href="https://instagram.com/krausefx">Instagram</a>.</p>
-
-<h3 id="what-does-it-mean-for-fastlane">What does it mean for <em>fastlane</em>?</h3>
-
-<p>Google will keep investing in <em>fastlane</em>. There will be no changes to <em>fastlane</em> and its support system. To get help with <em>fastlane</em>, <a href="https://github.com/fastlane/fastlane/issues/new/choose">submit an issue on GitHub</a>. At the same time, we will continue accepting <a href="https://github.com/fastlane/fastlane/blob/master/CORE_CONTRIBUTOR.md">new fastlane core contributors</a>, meaning you can get full push access to the <em>fastlane</em> code base.</p>
-
-<h3 id="thank-you">Thank you</h3>
-
-<p>I’d like to thank everyone from the Twitter Fabric, Firebase and Google Cloud teams for taking <em>fastlane</em> where it is today. I’d like to specifically call out all the contributors and the iOS community for welcoming <em>fastlane</em> and continuing to support it. In particular <a href="https://twitter.com/hemal">Hemal</a> who believed in my vision and helped me grow personally and professionally.</p>
-
-
-        <!-- <p style="margin-top: 30px" class="side-projects-note">
-  <small>Unless otherwise mentioned in the post, those projects are side projects which I work on on weekends and evenings, and are not affiliated with my work or employer.</small>
-</p>
- -->
-      </div>
-
-      <p class="extra-info">
-        
-          Tags: fastlane &nbsp; | &nbsp; 
-        
-        <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2019-02-13-ending-my-fastlane-chapter.md" target="_blank" class="forkButton">
-  <svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
- 
-  Edit on GitHub
-</a>
-      </p>
-    </article>
-  
-    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline"><a href="/blog/continuous-delivery-for-your-profile-picture">How I silently changed my profile picture every other year</a></h1>
-        <p class="post-meta">
-          <time datetime="2018-12-30T00:00:00+00:00" itemprop="datePublished">
-            
-            Dec 30, 2018
-          </time>
-          </p>
-      </header>
-
-      <div class="post-content" itemprop="articleBody">
-        <p><a href="https://twitter.com/rrhoover">Ryan Hoover</a> hasn’t changed his profile picture for about 10 years now.</p>
-
-<p>He talks about it on his blog <a href="https://medium.com/@rrhoover/why-i-never-change-my-profile-pic-72de0daa2785">“Why I Never Change My Profile Pic”</a>:</p>
-
-<blockquote>
-  <p><strong>People recognize you by your avatar</strong>. Once changed, followers need to re-associate the new photo with your person.</p>
-</blockquote>
-
-<p>I very much agree: whenever someone changes their profile picture, it takes time to get used to it, and start recognizing their avatar in timelines again.</p>
-
-<div class="jekyll-twitter-plugin"><blockquote class="twitter-tweet"><p lang="en" dir="ltr">That’s exactly what I think too when I come across some weird new avatar because someone changed theirs.</p>&mdash; Todd Thomas (@toddthomas) <a href="https://twitter.com/toddthomas/status/968536885415981057?ref_src=twsrc%5Etfw">February 27, 2018</a></blockquote>
-<script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-</div>
-
-<p>Back in 2014 I took a photo at the local photo studio <a href="http://www.die-fotograefin.at/">Die Fotogräfin</a>:</p>
-
-<p><img src="/assets/posts/profilePictures/FelixKrause2014.jpg" width="100" alt="Felix Krause in 2014" /></p>
-<p style="margin-top: -10px; margin-bottom: 0px"><small style="margin-left: 35px;">2014</small></p>
-
-<p>After a while, I didn’t like the fact that the profile picture isn’t updated at all, but also I wanted to follow Ryan’s advice. The solution?</p>
-
-<p><strong>Let’s take the exact same picture again</strong>, same t-shirt, same light, same background, and same pose:</p>
-
-<p><img src="/assets/posts/profilePictures/FelixKrause2016.jpg" width="100" alt="Felix Krause in 2016" /></p>
-<p style="margin-top: -10px; margin-bottom: 0px"><small style="margin-left: 35px;">2016</small></p>
-
-<p>I silently changed the profile picture on Twitter and GitHub, and almost no one noticed, with just a few <a href="https://twitter.com/hemal/status/818872223268294656">tweets</a> calling me out.</p>
-
-<p>It even went that far, that <a href="https://twitter.com/steipete">Peter Steinberger</a> covered my profile picture story in his conference talk about <a href="https://twitter.com/steipete/status/998454406126424069">personal branding</a>.</p>
-
-<p>Using this approach, you can keep the recognition value, while making sure your current profile picture reflects on how you currently look like.</p>
-
-<p>Following the “Continuous Delivery for your profile picture” approach, I took another one this year.</p>
-
-<p><img src="/assets/posts/profilePictures/FelixKrause2018.jpg" width="100" alt="Felix Krause in 2018" /></p>
-
-<p style="margin-top: -10px; margin-bottom: 0px"><small style="margin-left: 35px;">2018</small></p>
-
-<p>Again, almost no one noticed, with only <a href="https://twitter.com/lehrjulian/status/1077881037164814336">one tweet</a> mentioning it.</p>
-
-<p>So here are the last 6 years in profile pictures - I plan on continuing this strategy and take a new photo every second year:</p>
-
-<p><img src="/assets/posts/profilePictures/ProfilePictureDiff.jpg" /></p>
-
-
-        <!-- <p style="margin-top: 30px" class="side-projects-note">
-  <small>Unless otherwise mentioned in the post, those projects are side projects which I work on on weekends and evenings, and are not affiliated with my work or employer.</small>
-</p>
- -->
-      </div>
-
-      <p class="extra-info">
-        
-          Tags: profile, picture, personal, brand &nbsp; | &nbsp; 
-        
-        <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2018-12-30-continuous-delivery-for-your-profile-picture.md" target="_blank" class="forkButton">
-  <svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
- 
-  Edit on GitHub
-</a>
-      </p>
-    </article>
-  
-
-  <!-- Pagination links -->
-  <div class="pagination">
-    
-      <span class="previous">Newer</span>
-    
-    /
-    
-      <a href="/blog/page2/" class="next">Older</a>
-    
   </div>
 
-</div>
+  <p class="extra-info">
+    
+      Tags: ios, privacy, location, images, library &nbsp; | &nbsp; 
+    
+    <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2017-10-09-ios-privacy-detectlocation-an-easy-way-to-access-the-users-ios-location-data-without-actually-having-access.md" target="_blank" class="forkButton">
+  <svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+ 
+  Edit on GitHub
+</a>
+  </p>
+</article>
 
       </div>
     </main>

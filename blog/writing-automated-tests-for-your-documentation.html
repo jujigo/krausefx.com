@@ -8,7 +8,7 @@
 
   <title>
     
-      Felix Krause
+      Writing automated tests for your documentation &middot; Felix Krause
     
   </title>
   
@@ -568,358 +568,179 @@ preloadStoriesIndex();
 </div>
 
 
-        <div class="home">
-  
-    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline"><a href="/blog/instapipe">instapipe.net - Distribute your Instagram stories</a></h1>
-        <p class="post-meta">
-          <time datetime="2019-05-22T00:00:00+00:00" itemprop="datePublished">
-            
-            May 22, 2019
-          </time>
-          </p>
-      </header>
-
-      <div class="post-content" itemprop="articleBody">
-        <h2 id="background">Background</h2>
-
-<p>You want to share experiences as they are happening in your life. Instagram Stories is a great way to do so, thanks to cross-posting to Facebook, Messenger and Instagram itself, allowing most people to view your stories.</p>
-
-<p>However just like Snapchat, the platforms try to lock you in, with the content <strong>you</strong> create. Many of my family members and close friends don’t use FB/IG daily, but still wanted to stay up to date on what I’m up to.</p>
-
-<p>Due to lack of an official API, and any kinds of integrations, the only way to access your stories is through the inofficial API the Instagram mobile- and web client use.</p>
-
-<h2 id="solution">Solution</h2>
-
-<p>A simple web service that automatically downloads and publishes your stories on various platforms. It’s open source and fully self hosted, check it out <a href="https://github.com/KrauseFx/instapipe">on GitHub</a>.</p>
-
-<h3 id="embed-into-websites">Embed into websites</h3>
-
-<p><a href="https://whereisfelix.today">
-  <img src="/assets/posts/instapipe/whereisfelixScreenshot.jpg" />
-</a></p>
-
-<p>Showing what you’re up to on the websites you operate is an easy way to make your online presence more personal.</p>
-
-<ul>
-  <li><a href="https://whereisfelix.today">On whereisfelix.today</a></li>
-  <li><a href="https://krausefx.com">Integrated into krausefx.com</a> (desktop only)</li>
-  <li><a href="https://krausefx.github.io/instapipe/web/index.html">Plain live demo</a></li>
-</ul>
-
-<p><strong>Features</strong></p>
-
-<ul>
-  <li>Design similar to instagram.com web</li>
-  <li>Arrow keys to go back and forth between stories</li>
-  <li>Support for photos and videos</li>
-  <li>Support for desktop and mobile browsers</li>
-  <li>Dismiss stories using ESC key, and clicking the dimmed area</li>
-  <li>Pre-loading of the next story for instant rendering</li>
-  <li>Basic features like rendering of the progress bar, the relative time stamp, as well as linking to your profile</li>
-  <li>Zero dependencies, plain JavaScript, CSS and HTML in a single file</li>
-</ul>
-
-<h3 id="provide-a-json-api">Provide a JSON API</h3>
-
-<p>Of course it also provides you with a JSON API, that can be used to integrate your Instagram stories into any app or service. The API includes all relevant data, including the raw image, location and the exact resolution of the media assets.</p>
-
-<p><img src="/assets/posts/instapipe/apiScreenshot.jpg" /></p>
-
-<p><a href="https://instapipe.herokuapp.com/stories.json?user_id=4409072">https://instapipe.herokuapp.com/stories.json?user_id=4409072</a></p>
-
-<p>Make sure to manually copy &amp; paste this in a new tab to avoid the cross-site scripting protection</p>
-
-<h3 id="telegram-group">Telegram group</h3>
-
-<p>Many of my friends don’t want to check Instagram every day, but still want to stay up to date with what I’m up to. Since they all use Telegram already, I set up a channel that automatically shows the stories I post.</p>
-
-<p><a href="https://t.me/joinchat/AAAAAFADGfZcXqQj3TK73A">
-  <img src="/assets/posts/instapipe/telegramScreenshot.jpg" />
-</a></p>
-
-<p>A <a href="https://t.me/joinchat/AAAAAFADGfZcXqQj3TK73A">Telegram group</a> containing all my latest stories. In particular nice to get an overview over all your most recent stories. Join it <a href="https://t.me/joinchat/AAAAAFADGfZcXqQj3TK73A">here</a>.</p>
-
-<h2 id="how-it-works">How it works</h2>
-
-<p>Instapipe is a simple server, that periodically fetches your most recent Instagram stories. As soon as a new story is available, it will</p>
-
-<ul>
-  <li>Download the highest resolution photo/video and store it on your personal Google Cloud Bucket</li>
-  <li>Store the associated metadata in a database you own, the data includes
-    <ul>
-      <li>24 hours signed URL to the full-resolution photo/video of your Google Cloud Storage</li>
-      <li>The full path of the resource referencing your Google Cloud bucket</li>
-      <li>The user ID who published the asset</li>
-      <li>The height and width of the photo/video</li>
-      <li>The exact time stamp of publishing</li>
-      <li>An <code class="highlighter-rouge">is_video</code> flag</li>
-      <li>The location (if a location tag is attached)
-        <ul>
-          <li>Location Name (e.g. <code class="highlighter-rouge">Das Gym</code>)</li>
-          <li><code class="highlighter-rouge">lat</code> and <code class="highlighter-rouge">lng</code> coordinates</li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-  <li>Post the new story into a Telegram group (<a href="https://t.me/joinchat/AAAAAFADGfZcXqQj3TK73A">check it out here</a>)</li>
-</ul>
-
-<p><img src="/assets/posts/instapipe/databaseScreenshot.jpg" /></p>
-
-<hr />
-
-<h3 style="text-align: center; font-size: 140%"><a href="https://instapipe.net">Open instapipe.net</a></h3>
-
-
-
-        <!-- <p style="margin-top: 30px" class="side-projects-note">
-  <small>Unless otherwise mentioned in the post, those projects are side projects which I work on on weekends and evenings, and are not affiliated with my work or employer.</small>
-</p>
- -->
-      </div>
-
-      <p class="extra-info">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline"><a href="/blog/writing-automated-tests-for-your-documentation">Writing automated tests for your documentation</a></h1>
+    <p class="post-meta">
+      <time datetime="2016-11-01T00:00:00+00:00" itemprop="datePublished">
         
-          Tags: open-source, instagram, telegram &nbsp; | &nbsp; 
-        
-        <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2019-05-22-instapipe.md" target="_blank" class="forkButton">
+        Nov 1, 2016
+      </time> &nbsp; | &nbsp; 
+      <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2016-11-01-writing-automated-tests-for-your-documentation.md" target="_blank" class="forkButton">
   <svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
  
   Edit on GitHub
 </a>
-      </p>
-    </article>
-  
-    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline"><a href="/blog/walk-with-friends">walkwithfriends.net - Stay in touch with remote friends</a></h1>
-        <p class="post-meta">
-          <time datetime="2019-05-21T00:00:00+00:00" itemprop="datePublished">
-            
-            May 21, 2019
-          </time>
-          </p>
-      </header>
+  </header>
 
-      <div class="post-content" itemprop="articleBody">
-        <p>Staying in touch with close friends requires more effort when everybody lives somewhere else on the planet. Scheduling calls to catch up certainly works, but it requires time-commitment, and time zones make scheduling unnecessarily complicated.</p>
+  <div class="post-content" itemprop="articleBody">
+    <p>The 2 favourite topics of every engineer are usually unit tests and documentation. The last few weeks I’ve put some thoughts in how to combine those two things for the ultimate developer joy.</p>
 
-<p>After living in NYC for a year, I ended up doing the following: If I walk somewhere for about 30 minutes, I’d text 2 friends or family members, asking if they’re available for a chat. Often one of them would end up calling me. This way, no prior planning was necessary, things felt more spontaneous and I was able to use my NYC walking time to catch up.</p>
-
-<h2 id="the-problems">The problems</h2>
+<p>Why should I write tests for my documentation? </p>
 
 <ul>
-  <li>If I text a friend <code class="highlighter-rouge">Hey X, are you free for a call?</code>, chances are they’re at work, asleep, with friends or don’t look at their phone. They’d see my message 2 hours later and reply <code class="highlighter-rouge">Yep, sure, calling you now</code>. The problem here is that by that time I’m unavailable, as the message is from 2 hours ago.</li>
-  <li>If a friend doesn’t know about this setup, they’d think I want to discuss something specific or urgent, however those kinds of calls are just to catch up and stay in touch.</li>
-  <li>Often, either none of my friends were available, or multiple responded, so it was always a tricky balance on how many friends I’d text, with the risk of both of them replying <code class="highlighter-rouge">Yep, I'm free now</code></li>
-  <li>If one friend is never available, you kind of “forget” to text them, as you already assume subconsciously that they won’t be available</li>
+  <li>You might forget to update parts of the documentation when you update your API or interface</li>
+  <li>Spelling mistakes happen in code samples</li>
+  <li>You want to make sure you don’t introduce any regressions with a new release</li>
 </ul>
 
-<h2 id="the-solution">The solution</h2>
-
-<p>A Telegram bot that manages the communication and revokes messages as soon as you’re unavailable again.</p>
-
-<h3 style="text-align: center; font-size: 35px; border: none">
-  <a href="https://t.me/WalkWithFriendsBot" target="_blank" style="text-decoration: none;">
-    🔰 Start using the bot 🔰
-  </a>
-</h3>
-
-<table style="width: 90%">
-  <tr>
-    <td>
-      <img src="/assets/posts/walkwithfriends/screenshot1_framed.jpg" />
-    </td>
-    <td>
-      <img src="/assets/posts/walkwithfriends//screenshot2_framed.jpg" />
-    </td>
-    <td>
-      <img src="/assets/posts/walkwithfriends//screenshot3_framed.jpg" />
-    </td>
-  </tr>
-</table>
-
-<p><strong>Why Telegram?</strong></p>
+<p>With the launch of the new <a href="https://docs.fastlane.tools">docs.fastlane.tools</a> website, we took the time to set up a proper documentation system based on markdown files, converted to a static HTML page using <a href="http://www.mkdocs.org/">MkDocs</a>. By having full control over the generated HTML code, and going 100% open source on GitHub, you can do powerful things:</p>
 
 <ul>
-  <li>It works on every major platform, including iOS, Android and macOS</li>
-  <li>It supports revoking of messages and notifications, even from the lock screen</li>
-  <li>They have a solid bots API</li>
-  <li>Registration for new users is easy &amp; fast</li>
+  <li>Fail the build when a page got removed from the index using <a href="http://danger.systems">danger</a> (see <a href="https://github.com/fastlane/docs/blob/master/Dangerfile">Dangerfile</a>)</li>
+  <li>Generate redirects when a page got moved (see <a href="https://github.com/fastlane/docs/blob/master/scripts/ci/generate_redirects.rb">generate_redirects.rb</a> and <a href="https://github.com/fastlane/docs/blob/master/scripts/ci/available_redirects.rb">available_redirects.rb</a>)</li>
+  <li>Make sure the repo is in a valid states, and all documentation follows the convention</li>
+  <li>Write tests for your documentation</li>
 </ul>
 
-<h3 id="more-details-on-walkwithfriendsnet"><a href="https://walkwithfriends.net">More details on WalkWithFriends.net</a></h3>
+<h2 id="tests-for-documentation-what-does-this-even-mean">Tests for documentation, what does this even mean?</h2>
+
+<p>Just like with your actual code base, you want to be sure that your repository is in a valid state. The same applies for your documentation. Is your latest documentation up to date, and does it work as expected? Does it work with your latest release?</p>
+
+<p>The first time I thought about running tests for documentation I thought only about the code samples. However you can write tests for a lot of more things. For example you want to ensure that all your assets are in the right sub-directory, that all referenced images and markdown files are available and follow your naming scheme.</p>
+
+<p>Some examples of what you can do:</p>
+
+<h3 id="validate-file-names">Validate file names</h3>
+
+<p>Ensure that all file names follow your convention - this is especially important if the file names are visible in the URL.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">private_lane</span> <span class="ss">:ensure_filenames</span> <span class="k">do</span>
+  <span class="no">UI</span><span class="p">.</span><span class="nf">message</span> <span class="s2">"🕗  Making sure file names are all lowercase..."</span>
+  <span class="no">Dir</span><span class="p">[</span><span class="s2">"docs/**/*.md"</span><span class="p">].</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">current_file</span><span class="o">|</span>
+    <span class="k">if</span> <span class="n">current_file</span> <span class="o">=~</span> <span class="sr">/[A-Z]/</span>
+      <span class="no">UI</span><span class="p">.</span><span class="nf">user_error!</span><span class="p">(</span><span class="s2">".md files must not be upper case, use a dash instead (file '</span><span class="si">#{</span><span class="n">current_file</span><span class="si">}</span><span class="s2">')"</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="no">UI</span><span class="p">.</span><span class="nf">success</span> <span class="s2">"✅  All doc files are properly named to not be camel case"</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="ensure-every-page-has-a-header">Ensure every page has a header</h3>
+
+<p><a href="https://docs.fastlane.tools">fastlane docs</a> require a title on each page to be consistent.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">private_lane</span> <span class="ss">:ensure_headers</span> <span class="k">do</span>
+  <span class="no">UI</span><span class="p">.</span><span class="nf">message</span> <span class="s2">"🕗  Investigating all docs files and their headers..."</span>
+  <span class="n">exceptions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"docs/index.md"</span><span class="p">]</span>
+
+  <span class="no">Dir</span><span class="p">[</span><span class="s2">"docs/**/*.md"</span><span class="p">].</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">current_file</span><span class="o">|</span>
+    <span class="k">next</span> <span class="k">if</span> <span class="n">exceptions</span><span class="p">.</span><span class="nf">include?</span><span class="p">(</span><span class="n">current_file</span><span class="p">)</span>
+    <span class="k">unless</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="n">current_file</span><span class="p">).</span><span class="nf">start_with?</span><span class="p">(</span><span class="s2">"#"</span><span class="p">))</span>
+      <span class="no">UI</span><span class="p">.</span><span class="nf">user_error!</span><span class="p">(</span><span class="s2">"File '</span><span class="si">#{</span><span class="n">current_file</span><span class="si">}</span><span class="s2">' doesn't start with #"</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="no">UI</span><span class="p">.</span><span class="nf">success</span> <span class="s2">"✅  All doc files start with a header"</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="ensure-all-image-assets-are-available-and-in-the-correct-folder">Ensure all image assets are available and in the correct folder</h3>
+
+<p>Automatically verify all referenced image assets are available and stored in the right folder, find the source 
+<a href="https://github.com/fastlane/docs/blob/c1a551d345756d3b2023c4ca629bb2f7ac9d1406/fastlane/Fastfile#L67-L113">here</a>.</p>
+
+<h3 id="ensure-spelling-of-certain-words">Ensure spelling of certain words</h3>
+
+<p>Recently we switched from <code class="highlighter-rouge">fastlane</code> to <em>fastlane</em> in markdown files, so we want to ensure all new docs use the new way of spelling.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">private_lane</span> <span class="ss">:ensure_tool_name_formatting</span> <span class="k">do</span>
+  <span class="no">UI</span><span class="p">.</span><span class="nf">message</span> <span class="s2">"🕗  Verifying tool name formatting..."</span>
+  <span class="nb">require</span> <span class="s1">'fastlane/tools'</span>
+
+  <span class="no">Dir</span><span class="p">[</span><span class="s2">"docs/**/*.md"</span><span class="p">].</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">path</span><span class="o">|</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="no">Fastlane</span><span class="o">::</span><span class="no">TOOLS</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">tool</span><span class="o">|</span>
+      <span class="k">if</span> <span class="n">content</span><span class="p">.</span><span class="nf">include?</span><span class="p">(</span><span class="s2">"`</span><span class="si">#{</span><span class="n">tool</span><span class="si">}</span><span class="s2">`"</span><span class="p">)</span>
+        <span class="no">UI</span><span class="p">.</span><span class="nf">user_error!</span><span class="p">(</span><span class="s2">"Use _</span><span class="si">#{</span><span class="n">tool</span><span class="si">}</span><span class="s2">_ instead of `</span><span class="si">#{</span><span class="n">tool</span><span class="si">}</span><span class="s2">` to mention a tool in the docs in '</span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+      <span class="k">end</span>
+
+      <span class="k">if</span> <span class="n">content</span><span class="p">.</span><span class="nf">include?</span><span class="p">(</span><span class="s2">"_</span><span class="si">#{</span><span class="n">tool</span><span class="p">.</span><span class="nf">to_s</span><span class="p">.</span><span class="nf">capitalize</span><span class="si">}</span><span class="s2">_"</span><span class="p">)</span> <span class="o">||</span> <span class="n">content</span><span class="p">.</span><span class="nf">include?</span><span class="p">(</span><span class="s2">"`</span><span class="si">#{</span><span class="n">tool</span><span class="p">.</span><span class="nf">to_s</span><span class="p">.</span><span class="nf">capitalize</span><span class="si">}</span><span class="s2">`"</span><span class="p">)</span>
+        <span class="no">UI</span><span class="p">.</span><span class="nf">user_error!</span><span class="p">(</span><span class="s2">"fastlane tools have to be formatted in lower case: </span><span class="si">#{</span><span class="n">tool</span><span class="si">}</span><span class="s2"> in '</span><span class="si">#{</span><span class="n">path</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="no">UI</span><span class="p">.</span><span class="nf">success</span> <span class="s2">"✅  fastlane formatting is correct"</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="verify-code-samples">Verify code samples</h2>
+
+<p>How many times have you copied a code sample to try it out, just to find out it doesn’t work with the latest release? There are various reasons for this, and without tests there is almost no way to avoid this. The error can be as simple as a spelling mistake.</p>
+
+<p>By having full control over your documentation, you can easily iterate over all your code samples, and make sure they work as expected.</p>
+
+<p>For <a href="https://fastlane.tools">fastlane</a> we found 28 errors just in the <a href="https://docs.fastlane.tools/actions/">actions documentation</a>, most commonly syntax errors or just simple spelling mistakes in parameter names.</p>
+
+<p>For all the checks mentioned below, the source is on the <a href="https://github.com/fastlane/docs/blob/master/fastlane/actions/test_sample_code.rb">fastlane docs repo</a>.</p>
+
+<h3 id="catch-syntax-errors-in-code-samples">Catch syntax errors in code samples</h3>
+
+<p><img src="/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_5817c1e42994ca082108fc0d_1477951976150__img.png_" alt="" /></p>
+
+<p>Nothing is more frustrating than copying a code sample and having to fix the syntax to make it work. Most users won’t spend the time to look into how they can contribute to your docs to fix the error.</p>
+
+<h3 id="catch-unavailable-actions-or-methods">Catch unavailable actions or methods</h3>
+
+<p><img src="/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_5817c285197aea1a94bcc18f_1477952138871__img.png_" alt="" /></p>
+
+<p>For fastlane most code samples call certain actions or integrations. Using tests we ensure that this action is available and correctly spelled.</p>
+
+<h3 id="verify-action-parameters">Verify action parameters</h3>
+
+<p><img src="/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_5817c33b893fc0c77e1ed440_1477952319091__img.png_" alt="" /></p>
+
+<p>Most fastlane actions allow passing of named parameters. We now automatically verify that all parameters are available to use.</p>
+
+<h3 id="verify-parameter-types">Verify parameter types</h3>
+
+<p><img src="/squarespace_images/static_545299aae4b0e9514fe30c95_54529a29e4b025a90f45cc50_5817c493b8a79b7befea0fdf_1477952663470__img.png_" alt="" /></p>
+
+<p>Every fastlane parameter has a type defined, which fastlane validates on run-time. It’s easy to get a type wrong in the documentation, so we now validate those too.
+ </p>
+
+<h2 id="when-to-run-tests-for-your-docs">When to run tests for your docs?</h2>
+
+<p>There are 2 points where you want to verify your docs are valid and up to date:</p>
+
+<ul>
+  <li>When you push a new release of your software (<a href="https://github.com/fastlane/fastlane/blob/07baac7d27aab54a622d6d01942066b008e40c5f/fastlane/fastlane/Fastfile#L231-L232">deploy script of your software</a>)</li>
+  <li>When you update your documentation (<a href="https://github.com/fastlane/docs/blob/a1b3792d7bbc8a38524790b1f2e3e18bf7de6dc2/fastlane/Fastfile#L10">CI test script of your docs</a>)</li>
+</ul>
+
+<p>So whatever introduced a regression, the build will be failing and you can’t merge the change into master.</p>
+
+<h2 id="where-to-go-next">Where to go next</h2>
+
+<p>These are just some things you can do with tests for your documentation, however I’m sure there are so many things you can automatically test and verify every time your code changes. Let me know if you have any ideas on what other crazy things you can do.</p>
 
 
-        <!-- <p style="margin-top: 30px" class="side-projects-note">
+    <!-- <p style="margin-top: 30px" class="side-projects-note">
   <small>Unless otherwise mentioned in the post, those projects are side projects which I work on on weekends and evenings, and are not affiliated with my work or employer.</small>
 </p>
  -->
-      </div>
-
-      <p class="extra-info">
-        
-          Tags: telegram &nbsp; | &nbsp; 
-        
-        <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2019-05-21-walk-with-friends.md" target="_blank" class="forkButton">
-  <svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
- 
-  Edit on GitHub
-</a>
-      </p>
-    </article>
-  
-    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline"><a href="/blog/ending-my-fastlane-chapter">Ending my fastlane chapter</a></h1>
-        <p class="post-meta">
-          <time datetime="2019-02-13T00:00:00+00:00" itemprop="datePublished">
-            
-            Feb 13, 2019
-          </time>
-          </p>
-      </header>
-
-      <div class="post-content" itemprop="articleBody">
-        <p>I’ve built and published iOS apps for over 8 years now. Back then the App Store review times were over 2 weeks, iTunes Connect would allow only uploads of a single screenshot at a time, there was no CocoaPods… and code signing was pretty much the same as it is today.</p>
-
-<p>In 2014, I sat in my dorm room and started working on a tool to solve some of the challenges I faced as an iOS developer. It started out by just automating the upload of screenshots and binaries to iTunes Connect. After publishing the initial version in November 2014, the iOS community seemed excited about it. It slowly went from just <em>deliver</em>, to more tools like <em>snapshot</em> to generate the screenshots and <em>pem</em> to automate iOS push notifications.</p>
-
-<p><img src="/assets/posts/fastlane-dormroom.jpeg" /></p>
-
-<p>Fast-forward to today, I’m so humbled by what <em>fastlane</em> has grown to be. It has changed the way large iOS teams work every day, how they release their app updates, and how code signing works. It even enabled founders to start new businesses using <em>fastlane</em> as their core foundation.</p>
-
-<p><img src="/assets/posts/fastlane-growth.png" style="margin-top: 20px; margin-bottom: 20px" /></p>
-
-<p>I’m so proud to see how the community has grown around it. When <em>fastlane</em> initially launched, it supported only 10 integrations. Today there are over 570 different integrations, from code coverage reports, beta testing services to build version management. All of this wouldn’t have been possible without the <a href="https://github.com/fastlane/fastlane/graphs/contributors">all the 922 contributors of the <em>fastlane</em> main code base</a>, all <a href="https://docs.fastlane.tools/plugins/available-plugins/">the authors of the 355 third party plugins</a>, as well as the <a href="https://github.com/fastlane/fastlane#fastlane-team">fastlane core contributor team</a>.</p>
-
-<p><img src="/assets/posts/fastlane-team.jpg" /></p>
-
-<p>It was great to see <em>fastlane</em> evolving from a small side project, into a stable, self-sustainable open source project with a strong community of contributors around it. I have no doubts that <em>fastlane</em> will continue growing stronger in the next years, with the support of Google, as well as other companies and individual contributors.</p>
-
-<p><strong>📯 After 4.5 years it’s time for me to step away from <em>fastlane</em>, and with that leave Google.</strong></p>
-
-<p>As for what’s next, I don’t have any specific plans yet. I’ll be taking a vacation and then figuring out what problem I’m excited to solve next :)</p>
-
-<p>As always, you can stay in touch on <a href="https://twitter.com/krausefx">Twitter</a> and <a href="https://instagram.com/krausefx">Instagram</a>.</p>
-
-<h3 id="what-does-it-mean-for-fastlane">What does it mean for <em>fastlane</em>?</h3>
-
-<p>Google will keep investing in <em>fastlane</em>. There will be no changes to <em>fastlane</em> and its support system. To get help with <em>fastlane</em>, <a href="https://github.com/fastlane/fastlane/issues/new/choose">submit an issue on GitHub</a>. At the same time, we will continue accepting <a href="https://github.com/fastlane/fastlane/blob/master/CORE_CONTRIBUTOR.md">new fastlane core contributors</a>, meaning you can get full push access to the <em>fastlane</em> code base.</p>
-
-<h3 id="thank-you">Thank you</h3>
-
-<p>I’d like to thank everyone from the Twitter Fabric, Firebase and Google Cloud teams for taking <em>fastlane</em> where it is today. I’d like to specifically call out all the contributors and the iOS community for welcoming <em>fastlane</em> and continuing to support it. In particular <a href="https://twitter.com/hemal">Hemal</a> who believed in my vision and helped me grow personally and professionally.</p>
-
-
-        <!-- <p style="margin-top: 30px" class="side-projects-note">
-  <small>Unless otherwise mentioned in the post, those projects are side projects which I work on on weekends and evenings, and are not affiliated with my work or employer.</small>
-</p>
- -->
-      </div>
-
-      <p class="extra-info">
-        
-          Tags: fastlane &nbsp; | &nbsp; 
-        
-        <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2019-02-13-ending-my-fastlane-chapter.md" target="_blank" class="forkButton">
-  <svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
- 
-  Edit on GitHub
-</a>
-      </p>
-    </article>
-  
-    <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline"><a href="/blog/continuous-delivery-for-your-profile-picture">How I silently changed my profile picture every other year</a></h1>
-        <p class="post-meta">
-          <time datetime="2018-12-30T00:00:00+00:00" itemprop="datePublished">
-            
-            Dec 30, 2018
-          </time>
-          </p>
-      </header>
-
-      <div class="post-content" itemprop="articleBody">
-        <p><a href="https://twitter.com/rrhoover">Ryan Hoover</a> hasn’t changed his profile picture for about 10 years now.</p>
-
-<p>He talks about it on his blog <a href="https://medium.com/@rrhoover/why-i-never-change-my-profile-pic-72de0daa2785">“Why I Never Change My Profile Pic”</a>:</p>
-
-<blockquote>
-  <p><strong>People recognize you by your avatar</strong>. Once changed, followers need to re-associate the new photo with your person.</p>
-</blockquote>
-
-<p>I very much agree: whenever someone changes their profile picture, it takes time to get used to it, and start recognizing their avatar in timelines again.</p>
-
-<div class="jekyll-twitter-plugin"><blockquote class="twitter-tweet"><p lang="en" dir="ltr">That’s exactly what I think too when I come across some weird new avatar because someone changed theirs.</p>&mdash; Todd Thomas (@toddthomas) <a href="https://twitter.com/toddthomas/status/968536885415981057?ref_src=twsrc%5Etfw">February 27, 2018</a></blockquote>
-<script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-</div>
-
-<p>Back in 2014 I took a photo at the local photo studio <a href="http://www.die-fotograefin.at/">Die Fotogräfin</a>:</p>
-
-<p><img src="/assets/posts/profilePictures/FelixKrause2014.jpg" width="100" alt="Felix Krause in 2014" /></p>
-<p style="margin-top: -10px; margin-bottom: 0px"><small style="margin-left: 35px;">2014</small></p>
-
-<p>After a while, I didn’t like the fact that the profile picture isn’t updated at all, but also I wanted to follow Ryan’s advice. The solution?</p>
-
-<p><strong>Let’s take the exact same picture again</strong>, same t-shirt, same light, same background, and same pose:</p>
-
-<p><img src="/assets/posts/profilePictures/FelixKrause2016.jpg" width="100" alt="Felix Krause in 2016" /></p>
-<p style="margin-top: -10px; margin-bottom: 0px"><small style="margin-left: 35px;">2016</small></p>
-
-<p>I silently changed the profile picture on Twitter and GitHub, and almost no one noticed, with just a few <a href="https://twitter.com/hemal/status/818872223268294656">tweets</a> calling me out.</p>
-
-<p>It even went that far, that <a href="https://twitter.com/steipete">Peter Steinberger</a> covered my profile picture story in his conference talk about <a href="https://twitter.com/steipete/status/998454406126424069">personal branding</a>.</p>
-
-<p>Using this approach, you can keep the recognition value, while making sure your current profile picture reflects on how you currently look like.</p>
-
-<p>Following the “Continuous Delivery for your profile picture” approach, I took another one this year.</p>
-
-<p><img src="/assets/posts/profilePictures/FelixKrause2018.jpg" width="100" alt="Felix Krause in 2018" /></p>
-
-<p style="margin-top: -10px; margin-bottom: 0px"><small style="margin-left: 35px;">2018</small></p>
-
-<p>Again, almost no one noticed, with only <a href="https://twitter.com/lehrjulian/status/1077881037164814336">one tweet</a> mentioning it.</p>
-
-<p>So here are the last 6 years in profile pictures - I plan on continuing this strategy and take a new photo every second year:</p>
-
-<p><img src="/assets/posts/profilePictures/ProfilePictureDiff.jpg" /></p>
-
-
-        <!-- <p style="margin-top: 30px" class="side-projects-note">
-  <small>Unless otherwise mentioned in the post, those projects are side projects which I work on on weekends and evenings, and are not affiliated with my work or employer.</small>
-</p>
- -->
-      </div>
-
-      <p class="extra-info">
-        
-          Tags: profile, picture, personal, brand &nbsp; | &nbsp; 
-        
-        <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2018-12-30-continuous-delivery-for-your-profile-picture.md" target="_blank" class="forkButton">
-  <svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
- 
-  Edit on GitHub
-</a>
-      </p>
-    </article>
-  
-
-  <!-- Pagination links -->
-  <div class="pagination">
-    
-      <span class="previous">Newer</span>
-    
-    /
-    
-      <a href="/blog/page2/" class="next">Older</a>
-    
   </div>
 
-</div>
+  <p class="extra-info">
+    
+      Tags: fastlane, tests, automated, docs &nbsp; | &nbsp; 
+    
+    <a href="https://github.com/KrauseFx/krausefx.com/edit/master/_posts/2016-11-01-writing-automated-tests-for-your-documentation.md" target="_blank" class="forkButton">
+  <svg viewBox="0 0 16 16" width="16px" height="16px"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+ 
+  Edit on GitHub
+</a>
+  </p>
+</article>
 
       </div>
     </main>
